@@ -10,6 +10,14 @@
                 <h5>Run Summary</h5>
             </div>
             <div class="card-body">
+                <!-- Exception mode banner -->
+                {% if match_run.mode == 'EXCEPTION' and match_run.status == 'SUCCESS' %}
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> <strong>Strict infeasible; exception mode used</strong>
+                    Exception mode allows policy violations to ensure complete matching.
+                </div>
+                {% endif %}
+                
                 <div class="row">
                     <div class="col-md-3">
                         <p><strong>Mode:</strong> {{ match_run.get_mode_display }}</p>
@@ -51,9 +59,13 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-3">
                     <div>
-                        <div class="form-check form-switch">
+                        <div class="form-check form-switch d-inline-block me-3">
                             <input class="form-check-input" type="checkbox" id="filterAmbiguous" data-testid="filter-ambiguous-toggle">
                             <label class="form-check-label" for="filterAmbiguous">Show Ambiguous Only</label>
+                        </div>
+                        <div class="form-check form-switch d-inline-block">
+                            <input class="form-check-input" type="checkbox" id="filterExceptions" data-testid="filter-exceptions-toggle">
+                            <label class="form-check-label" for="filterExceptions">Show Exceptions Only</label>
                         </div>
                     </div>
                     <div>
@@ -94,7 +106,7 @@
                                 </td>
                                 <td>
                                     {% if match.exception_flag %}
-                                        <span class="badge bg-danger">Exception</span>
+                                        <span class="badge bg-danger" data-testid="exception-pill-{{ match.id }}">Exception</span>
                                         <small class="d-block">{{ match.exception_type }}: {{ match.exception_reason|truncatewords:10 }}</small>
                                     {% else %}
                                         <span class="badge bg-success">Compliant</span>
@@ -124,22 +136,34 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const filterCheckbox = document.getElementById('filterAmbiguous');
+    const filterAmbiguousCheckbox = document.getElementById('filterAmbiguous');
+    const filterExceptionsCheckbox = document.getElementById('filterExceptions');
     const tableRows = document.querySelectorAll('#resultsTable tbody tr');
     
-    filterCheckbox.addEventListener('change', function() {
-        const showAmbiguousOnly = this.checked;
+    function updateFilters() {
+        const showAmbiguousOnly = filterAmbiguousCheckbox.checked;
+        const showExceptionsOnly = filterExceptionsCheckbox.checked;
         
         tableRows.forEach(row => {
             const isAmbiguous = row.getAttribute('data-ambiguous') === 'true';
+            const isException = row.getAttribute('data-exception') === 'true';
             
-            if (showAmbiguousOnly) {
-                row.style.display = isAmbiguous ? '' : 'none';
-            } else {
-                row.style.display = '';
+            let showRow = true;
+            
+            if (showAmbiguousOnly && !isAmbiguous) {
+                showRow = false;
             }
+            
+            if (showExceptionsOnly && !isException) {
+                showRow = false;
+            }
+            
+            row.style.display = showRow ? '' : 'none';
         });
-    });
+    }
+    
+    filterAmbiguousCheckbox.addEventListener('change', updateFilters);
+    filterExceptionsCheckbox.addEventListener('change', updateFilters);
 });
 </script>
 {% endblock %}
