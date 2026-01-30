@@ -1,0 +1,12 @@
+{
+  "name": "mcp-tools",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@jixo/mcp-pnpm": "4.0.0",
+    "@modelcontextprotocol/server-filesystem": "2026.1.14",
+    "@modelcontextprotocol/server-github": "2025.4.8",
+    "@modelcontextprotocol/server-postgres": "0.6.2",
+    "@playwright/mcp": "0.0.61"
+  }
+}

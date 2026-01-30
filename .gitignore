@@ -1,0 +1,111 @@
+############################
+# Python
+############################
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+############################
+# Virtual environments
+############################
+.venv/
+venv/
+env/
+ENV/
+
+############################
+# Django
+############################
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+*.pot
+*.mo
+
+############################
+# Django migrations (optional)
+# Comment this out if you DO want to commit migrations
+############################
+# **/migrations/*.py
+# !**/migrations/__init__.py
+
+############################
+# Environment variables / secrets
+############################
+.env
+.env.*
+!.env.example
+secrets.json
+
+############################
+# IDEs / Editors
+############################
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+############################
+# OS files
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+# Docker
+############################
+docker-compose.override.yml
+*.pid
+
+############################
+# Postgres
+############################
+.pgdata/
+pgdata/
+*.dump
+*.sql
+
+############################
+# Test / coverage
+############################
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+
+############################
+# Build / packaging
+############################
+build/
+dist/
+*.egg-info/
+
+############################
+# Logs & runtime artifacts
+############################
+logs/
+*.out
+
+############################
+# Uploaded CSVs / imports
+# (do not commit real participant data)
+############################
+uploads/
+imports/
+*.csv
+
+############################
+# OR-Tools / solver artifacts (if any temp files)
+############################
+solver_tmp/
+

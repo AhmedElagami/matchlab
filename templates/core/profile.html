@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Profile - {{ cohort.name }}</h2>
+        <p class="lead">Update your profile information</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.display_name.id_for_label }}" class="form-label">{{ form.display_name.label }}</label>
+                        {{ form.display_name }}
+                        {% if form.display_name.help_text %}
+                            <div class="form-text">{{ form.display_name.help_text }}</div>
+                        {% endif %}
+                        {% if form.display_name.errors %}
+                            <div class="text-danger">{{ form.display_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.organization.id_for_label }}" class="form-label">{{ form.organization.label }}</label>
+                        {{ form.organization }}
+                        {% if form.organization.help_text %}
+                            <div class="form-text">{{ form.organization.help_text }}</div>
+                        {% endif %}
+                        {% if form.organization.errors %}
+                            <div class="text-danger" data-testid="organization-error">{{ form.organization.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-testid="save-profile-button">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
