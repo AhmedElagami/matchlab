@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Manual Override - Run #{{ match_run.id }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Create Manual Override</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if swap_suggestion %}
+                    <div class="alert alert-warning">
+                        <h6>Swap Suggestion</h6>
+                        <p>This override would break the existing pairing: 
+                        <strong>{{ swap_suggestion.0.display_name }}</strong> ↔ <strong>{{ swap_suggestion.1.display_name }}</strong></p>
+                        <p>To maintain the one-to-one constraint, you might want to also pair:
+                        <strong>{{ swap_suggestion.0.display_name }}</strong> with <strong>{{ mentee.display_name }}</strong>.</p>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="confirm_swap" id="confirmSwap" data-testid="confirm-swap-checkbox">
+                            <label class="form-check-label" for="confirmSwap">
+                                I understand this will break an existing pairing and want to proceed
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="mentorSelect" class="form-label">Mentor</label>
+                                <select class="form-select" id="mentorSelect" name="mentor" required data-testid="override-mentor-select">
+                                    <option value="">Select a mentor</option>
+                                    {% for mentor in mentors %}
+                                    <option value="{{ mentor.id }}" {% if selected_mentor|add:"0" == mentor.id %}selected{% endif %}>
+                                        {{ mentor.display_name }} ({{ mentor.organization }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="menteeSelect" class="form-label">Mentee</label>
+                                <select class="form-select" id="menteeSelect" name="mentee" required data-testid="override-mentee-select">
+                                    <option value="">Select a mentee</option>
+                                    {% for mentee in mentees %}
+                                    <option value="{{ mentee.id }}" {% if selected_mentee|add:"0" == mentee.id %}selected{% endif %}>
+                                        {{ mentee.display_name }} ({{ mentee.organization }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="overrideReason" class="form-label">Override Reason</label>
+                        <textarea class="form-control" id="overrideReason" name="override_reason" rows="3" data-testid="override-reason-textarea">{{ override_reason }}</textarea>
+                        <div class="form-text">
+                            Required if this override creates a policy exception
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-testid="override-save-btn">Create Override</button>
+                    <a href="{% url 'admin_views:match_results' match_run_id=match_run.id %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Current Matches</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Mentor</th>
+                                <th>Mentor Org</th>
+                                <th>Mentee</th>
+                                <th>Mentee Org</th>
+                                <th>Match %</th>
+                                <th>Manual Override</th>
+                                <th>Exception</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in matches %}
+                            <tr class="{% if match.is_manual_override %}table-info{% endif %} {% if match.exception_flag %}table-danger{% endif %}">
+                                <td>{{ match.mentor.display_name }}</td>
+                                <td>{{ match.mentor.organization }}</td>
+                                <td>{{ match.mentee.display_name }}</td>
+                                <td>{{ match.mentee.organization }}</td>
+                                <td>{{ match.score_percent }}%</td>
+                                <td>
+                                    {% if match.is_manual_override %}
+                                        <span class="badge bg-info">Manual</span>
+                                        {% if match.override_reason %}
+                                            <small class="d-block">{{ match.override_reason|truncatewords:5 }}</small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">Algorithm</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if match.exception_flag %}
+                                        <span class="badge bg-danger">Exception</span>
+                                        <small class="d-block">{{ match.exception_type }}: {{ match.exception_reason|truncatewords:5 }}</small>
+                                    {% else %}
+                                        <span class="badge bg-success">Compliant</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

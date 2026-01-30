@@ -39,11 +39,23 @@
                     </div>
                     <div class="col-md-3">
                         {% if match_run.status == 'SUCCESS' %}
-                        <a href="{% url 'admin_views:export_match_run' match_run_id=match_run.id %}" class="btn btn-success" data-testid="export-csv-btn">
+                        <a href="{% url 'admin_views:export_match_run' match_run_id=match_run.id %}" class="btn btn-success mb-2" data-testid="export-csv-btn">
                             <i class="bi bi-download"></i> Export CSV
                         </a>
+                        <br>
+                        <form method="post" action="{% url 'admin_views:set_active_run' cohort_id=match_run.cohort.id match_run_id=match_run.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary mb-2" data-testid="set-active-btn">
+                                <i class="bi bi-check-circle"></i> Set as Active
+                            </button>
+                        </form>
+                        <br>
+                        <a href="{% url 'admin_views:override' match_run_id=match_run.id %}" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Manual Override
+                        </a>
                         {% endif %}
-                        <a href="{% url 'admin_views:run_matching' cohort_id=match_run.cohort.id %}" class="btn btn-secondary">
+                        <br>
+                        <a href="{% url 'admin_views:run_matching' cohort_id=match_run.cohort.id %}" class="btn btn-secondary mt-2">
                             <i class="bi bi-arrow-left"></i> Back to Matching
                         </a>
                     </div>

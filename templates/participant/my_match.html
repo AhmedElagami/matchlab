@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>My Match - {{ cohort.name }}</h2>
+        
+        {% if match %}
+        <div class="card" data-testid="my-match-card">
+            <div class="card-header">
+                <h5>Your Match</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Mentor</h6>
+                        <p><strong>{{ match.mentor.display_name }}</strong></p>
+                        <p>Organization: {{ match.mentor.organization }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Mentee</h6>
+                        <p><strong>{{ match.mentee.display_name }}</strong></p>
+                        <p>Organization: {{ match.mentee.organization }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="alert alert-primary">
+                            <h6>Match Percentage</h6>
+                            <p class="display-6">{{ match.score_percent }}%</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="alert {% if match.is_manual_override %}alert-warning{% else %}alert-success{% endif %}">
+                            <h6>Match Type</h6>
+                            <p>
+                                {% if match.is_manual_override %}
+                                    <span class="badge bg-warning">Manual Override</span>
+                                {% else %}
+                                    <span class="badge bg-success">Algorithm</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="alert {% if match.exception_flag %}alert-danger{% else %}alert-success{% endif %}">
+                            <h6>Policy Compliance</h6>
+                            <p>
+                                {% if match.exception_flag %}
+                                    <span class="badge bg-danger">Exception</span>
+                                    <small class="d-block">{{ match.exception_type }}: {{ match.exception_reason }}</small>
+                                {% else %}
+                                    <span class="badge bg-success">Compliant</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if match.is_manual_override and match.override_reason %}
+                <div class="alert alert-info">
+                    <h6>Override Reason</h6>
+                    <p>{{ match.override_reason }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h5>No Active Match Found</h5>
+            <p>There is currently no active match set for this cohort. Please check back later.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

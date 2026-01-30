@@ -347,6 +347,8 @@ def get_match_run_results(match_run: MatchRun) -> List[Dict[str, Any]]:
                 "exception_flag": match.exception_flag,
                 "exception_type": match.exception_type,
                 "exception_reason": match.exception_reason,
+                "is_manual_override": match.is_manual_override,
+                "override_reason": match.override_reason,
             }
         )
 
@@ -384,6 +386,8 @@ def export_match_run_csv(match_run: MatchRun) -> str:
             "exception_flag",
             "exception_type",
             "exception_reason",
+            "is_manual_override",
+            "override_reason",
         ]
     )
 
@@ -403,6 +407,8 @@ def export_match_run_csv(match_run: MatchRun) -> str:
                 result["exception_flag"],
                 result["exception_type"],
                 result["exception_reason"],
+                result["is_manual_override"],
+                result["override_reason"],
             ]
         )
 

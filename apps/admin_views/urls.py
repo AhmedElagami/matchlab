@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import run_matching
+from . import override_views
 
 app_name = "admin_views"
 
@@ -36,5 +37,20 @@ urlpatterns = [
         "match-run/<int:match_run_id>/export/",
         run_matching.export_match_run_view,
         name="export_match_run",
+    ),
+    path(
+        "match-run/<int:match_run_id>/override/",
+        override_views.override_view,
+        name="override",
+    ),
+    path(
+        "cohort/<int:cohort_id>/match-run/<int:match_run_id>/set-active/",
+        override_views.set_active_run_view,
+        name="set_active_run",
+    ),
+    path(
+        "cohort/<int:cohort_id>/my-match/",
+        override_views.my_match_view,
+        name="my_match",
     ),
 ]

@@ -45,8 +45,11 @@
         </div>
         
         <div class="mt-4">
-            <a href="{% url 'matching:preferences' cohort_id=cohort.id %}" class="btn btn-secondary">
+            <a href="{% url 'matching:preferences' cohort_id=cohort.id %}" class="btn btn-secondary me-2">
                 <i class="bi bi-list-ol"></i> Manage Preferences
+            </a>
+            <a href="{% url 'admin_views:my_match' cohort_id=cohort.id %}" class="btn btn-primary" data-testid="my-match-link">
+                <i class="bi bi-person-heart"></i> My Match
             </a>
         </div>
     </div>
