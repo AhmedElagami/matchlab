@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Run Matching - {{ cohort.name }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Run New Matching</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Matching Mode</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mode" id="modeStrict" value="STRICT" checked data-testid="mode-strict-radio">
+                                <label class="form-check-label" for="modeStrict">Strict Mode</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mode" id="modeException" value="EXCEPTION" disabled>
+                                <label class="form-check-label" for="modeException">Exception Mode (Not Implemented)</label>
+                            </div>
+                        </div>
+                        <div class="form-text">
+                            <strong>Strict Mode:</strong> Enforces all constraints (different org, mutual acceptability)<br>
+                            <strong>Exception Mode:</strong> Allows policy violations when strict matching is impossible
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-testid="run-strict-btn">Run Strict Matching</button>
+                </form>
+            </div>
+        </div>
+        
+        {% if match_run and match_run.status == 'FAILED' %}
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5>Matching Failed</h5>
+            </div>
+            <div class="card-body">
+                <h6>Failure Report</h6>
+                <pre>{{ match_run.failure_report|pprint }}</pre>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Match Runs</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_runs %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Mode</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for run in recent_runs %}
+                            <tr>
+                                <td>{{ run.id }}</td>
+                                <td>{{ run.get_mode_display }}</td>
+                                <td>
+                                    {% if run.status == 'SUCCESS' %}
+                                        <span class="badge bg-success">{{ run.get_status_display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ run.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ run.created_at|date:"Y-m-d H:i" }}</td>
+                                <td>
+                                    {% if run.status == 'SUCCESS' %}
+                                        <a href="{% url 'admin_views:match_results' match_run_id=run.id %}" class="btn btn-sm btn-outline-primary">View Results</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p>No recent match runs found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

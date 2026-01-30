@@ -1,5 +1,6 @@
 from django.db import models
-from apps.core.models import Participant
+from django.contrib.auth.models import User
+from apps.core.models import Participant, Cohort
 
 
 class Preference(models.Model):
@@ -144,3 +145,88 @@ class PairScore(models.Model):
 
     def __str__(self):
         return f"{self.mentor.display_name} <-> {self.mentee.display_name}: {self.score:.1f}%"
+
+
+class MatchRun(models.Model):
+    """A matching run execution."""
+
+    MODE_CHOICES = [
+        ("STRICT", "Strict"),
+        ("EXCEPTION", "Exception"),
+    ]
+
+    STATUS_CHOICES = [
+        ("SUCCESS", "Success"),
+        ("FAILED", "Failed"),
+    ]
+
+    cohort = models.ForeignKey(Cohort, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    mode = models.CharField(max_length=10, choices=MODE_CHOICES)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    objective_summary = models.JSONField(
+        default=dict, blank=True, help_text="Totals, exception counts, total score"
+    )
+    failure_report = models.JSONField(
+        default=dict, blank=True, help_text="Failure diagnostics when status=FAILED"
+    )
+    input_signature = models.TextField(
+        blank=True, help_text="Hash of relevant input for traceability"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Match Runs"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Match Run {self.id} ({self.mode}, {self.status}) - {self.cohort.name}"
+
+
+class Match(models.Model):
+    """A single mentor-mentee match from a match run."""
+
+    match_run = models.ForeignKey(MatchRun, on_delete=models.CASCADE, related_name="matches")
+    mentor = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name="mentor_matches")
+    mentee = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name="mentee_matches")
+    
+    # Match metrics
+    score_percent = models.IntegerField(help_text="Match percentage (0-100)")
+    
+    # Ambiguity detection
+    ambiguity_flag = models.BooleanField(default=False, help_text="Whether this match is ambiguous")
+    ambiguity_reason = models.TextField(blank=True, help_text="Explanation of ambiguity if flagged")
+    
+    # Exception handling
+    exception_flag = models.BooleanField(default=False, help_text="Whether this match violates policies")
+    exception_type = models.CharField(max_length=20, blank=True, help_text="Type of exception if any")
+    exception_reason = models.TextField(blank=True, help_text="Explanation of exception if flagged")
+    
+    # Manual overrides
+    is_manual_override = models.BooleanField(default=False, help_text="Whether this was manually overridden")
+    override_reason = models.TextField(blank=True, help_text="Reason for manual override if applicable")
+
+    class Meta:
+        verbose_name_plural = "Matches"
+        unique_together = (
+            ("match_run", "mentor"),
+            ("match_run", "mentee"),
+        )
+
+    def __str__(self):
+        return f"{self.mentor.display_name} <-> {self.mentee.display_name} ({self.score_percent}%)"
+
+
+class ActiveMatchRun(models.Model):
+    """The currently active match run for a cohort."""
+
+    cohort = models.OneToOneField(Cohort, on_delete=models.CASCADE)
+    match_run = models.ForeignKey(MatchRun, on_delete=models.CASCADE)
+    set_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    set_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Active Match Runs"
+
+    def __str__(self):
+        return f"Active Match Run for {self.cohort.name}: {self.match_run.id}"

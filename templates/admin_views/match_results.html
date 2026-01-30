@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Match Results - Run #{{ match_run.id }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Run Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <p><strong>Mode:</strong> {{ match_run.get_mode_display }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if match_run.status == 'SUCCESS' %}
+                                <span class="badge bg-success">{{ match_run.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-danger">{{ match_run.get_status_display }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <p><strong>Total Matches:</strong> {{ total_matches }}</p>
+                        <p><strong>Ambiguous Matches:</strong> <span class="badge bg-warning">{{ ambiguous_count }}</span></p>
+                    </div>
+                    <div class="col-md-3">
+                        <p><strong>Exceptions:</strong> <span class="badge bg-info">{{ exception_count }}</span></p>
+                        <p><strong>Created:</strong> {{ match_run.created_at|date:"Y-m-d H:i" }}</p>
+                    </div>
+                    <div class="col-md-3">
+                        {% if match_run.status == 'SUCCESS' %}
+                        <a href="{% url 'admin_views:export_match_run' match_run_id=match_run.id %}" class="btn btn-success" data-testid="export-csv-btn">
+                            <i class="bi bi-download"></i> Export CSV
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'admin_views:run_matching' cohort_id=match_run.cohort.id %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Matching
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if match_run.status == 'SUCCESS' %}
+        <div class="card">
+            <div class="card-header">
+                <h5>Match Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="filterAmbiguous" data-testid="filter-ambiguous-toggle">
+                            <label class="form-check-label" for="filterAmbiguous">Show Ambiguous Only</label>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-0"><strong>{{ matches|length }}</strong> matches displayed</p>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped" id="resultsTable" data-testid="results-table">
+                        <thead>
+                            <tr>
+                                <th>Mentor</th>
+                                <th>Mentor Org</th>
+                                <th>Mentee</th>
+                                <th>Mentee Org</th>
+                                <th>Match %</th>
+                                <th>Ambiguity</th>
+                                <th>Exception</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in matches %}
+                            <tr class="{% if match.ambiguity_flag %}table-warning{% endif %} {% if match.exception_flag %}table-danger{% endif %}" 
+                                data-ambiguous="{{ match.ambiguity_flag|yesno:'true,false' }}"
+                                data-exception="{{ match.exception_flag|yesno:'true,false' }}">
+                                <td>{{ match.mentor.display_name }}</td>
+                                <td>{{ match.mentor.organization }}</td>
+                                <td>{{ match.mentee.display_name }}</td>
+                                <td>{{ match.mentee.organization }}</td>
+                                <td>{{ match.score_percent }}%</td>
+                                <td>
+                                    {% if match.ambiguity_flag %}
+                                        <span class="badge bg-warning">Ambiguous</span>
+                                        <small class="d-block">{{ match.ambiguity_reason|truncatewords:10 }}</small>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Clear</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if match.exception_flag %}
+                                        <span class="badge bg-danger">Exception</span>
+                                        <small class="d-block">{{ match.exception_type }}: {{ match.exception_reason|truncatewords:10 }}</small>
+                                    {% else %}
+                                        <span class="badge bg-success">Compliant</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5>Matching Failed</h5>
+            </div>
+            <div class="card-body">
+                <h6>Failure Report</h6>
+                <pre>{{ match_run.failure_report|pprint }}</pre>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterCheckbox = document.getElementById('filterAmbiguous');
+    const tableRows = document.querySelectorAll('#resultsTable tbody tr');
+    
+    filterCheckbox.addEventListener('change', function() {
+        const showAmbiguousOnly = this.checked;
+        
+        tableRows.forEach(row => {
+            const isAmbiguous = row.getAttribute('data-ambiguous') === 'true';
+            
+            if (showAmbiguousOnly) {
+                row.style.display = isAmbiguous ? '' : 'none';
+            } else {
+                row.style.display = '';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}
