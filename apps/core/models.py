@@ -13,6 +13,11 @@ class Cohort(models.Model):
         ("MATCHED", "Matched"),
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="DRAFT")
+    cohort_config = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Configuration for scoring weights and thresholds",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

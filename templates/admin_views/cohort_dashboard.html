@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Cohort Dashboard: {{ cohort.name }}</h2>
+        
+        <!-- Readiness Status Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Readiness Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3" data-testid="readiness-status">
+                    {% if diagnostics.readiness.overall_ready %}
+                        <span class="badge bg-success me-2">READY</span>
+                        <span>All readiness checks passed</span>
+                    {% else %}
+                        <span class="badge bg-warning me-2">NOT READY</span>
+                        <span>Some readiness checks failed</span>
+                    {% endif %}
+                </div>
+                
+                <!-- Readiness Checks -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Counts Balance</strong>
+                                    <small class="d-block text-muted">{{ diagnostics.readiness.counts_mismatch.message }}</small>
+                                </div>
+                                {% if diagnostics.readiness.counts_mismatch.ready %}
+                                    <span class="badge bg-success rounded-pill">✓</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill">✗</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Organization Data</strong>
+                                    <small class="d-block text-muted">{{ diagnostics.readiness.missing_org.message }}</small>
+                                </div>
+                                {% if diagnostics.readiness.missing_org.ready %}
+                                    <span class="badge bg-success rounded-pill">✓</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill">✗</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Preference Submissions</strong>
+                                    <small class="d-block text-muted">{{ diagnostics.readiness.missing_submissions.message }}</small>
+                                </div>
+                                {% if diagnostics.readiness.missing_submissions.ready %}
+                                    <span class="badge bg-success rounded-pill">✓</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill">✗</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Mutual Acceptability</strong>
+                                    <small class="d-block text-muted">{{ diagnostics.readiness.mutual_acceptability.message }}</small>
+                                </div>
+                                {% if diagnostics.readiness.mutual_acceptability.ready %}
+                                    <span class="badge bg-success rounded-pill">✓</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill">✗</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Blockers Section -->
+        {% if not diagnostics.readiness.overall_ready or diagnostics.zero_option_participants %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Blockers & Issues</h5>
+            </div>
+            <div class="card-body">
+                <div data-testid="blockers-list">
+                    {% if diagnostics.suggested_actions %}
+                        <h6>Suggested Actions:</h6>
+                        <ul>
+                            {% for action in diagnostics.suggested_actions %}
+                                <li>{{ action }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    
+                    {% if diagnostics.zero_option_participants %}
+                        <h6 class="mt-3">Participants with Zero Options:</h6>
+                        <ul>
+                            {% for participant in diagnostics.zero_option_participants %}
+                                <li>{{ participant.display_name }} ({{ participant.role }}) - {{ participant.organization|default:"No Org" }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Organization Distribution -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Organization Distribution</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" data-testid="org-distribution-table">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Organization</th>
+                                <th>Mentors</th>
+                                <th>Mentees</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for org, stats in diagnostics.org_distribution.items %}
+                                <tr>
+                                    <td>{{ org }}</td>
+                                    <td>{{ stats.MENTOR }}</td>
+                                    <td>{{ stats.MENTEE }}</td>
+                                    <td>{{ stats.TOTAL }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Match Scores -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Top Match Scores</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Mentor</th>
+                                <th>Mentee</th>
+                                <th>Score</th>
+                                <th>Breakdown</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pair in top_pairs %}
+                                <tr>
+                                    <td>{{ pair.mentor.display_name }}</td>
+                                    <td>{{ pair.mentee.display_name }}</td>
+                                    <td>{{ pair.score|floatformat:1 }}%</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary" 
+                                                type="button" 
+                                                data-bs-toggle="collapse" 
+                                                data-bs-target="#breakdown-{{ pair.id }}"
+                                                aria-expanded="false"
+                                                aria-controls="breakdown-{{ pair.id }}">
+                                            Details
+                                        </button>
+                                        <div class="collapse mt-2" id="breakdown-{{ pair.id }}">
+                                            <div class="card card-body">
+                                                <ul class="mb-0">
+                                                    <li>Rank Score: {{ pair.score_breakdown.rank_score|floatformat:1 }}% → {{ pair.score_breakdown.rank_component|floatformat:1 }} pts</li>
+                                                    <li>Tag Overlap: {{ pair.score_breakdown.tag_overlap_score|floatformat:1 }}% → {{ pair.score_breakdown.tag_component|floatformat:1 }} pts</li>
+                                                    <li>Attribute Match: {{ pair.score_breakdown.attribute_match_score|floatformat:1 }}% → {{ pair.score_breakdown.attribute_component|floatformat:1 }} pts</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4">No match scores computed yet.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lowest Option Participants -->
+        {% if diagnostics.lowest_option_participants %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Participants with Lowest Options</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Organization</th>
+                                <th>Mutual Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for participant in diagnostics.lowest_option_participants %}
+                                <tr>
+                                    <td>{{ participant.display_name }}</td>
+                                    <td>{{ participant.role }}</td>
+                                    <td>{{ participant.organization|default:"No Org" }}</td>
+                                    <td>{{ participant.mutual_count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -113,3 +113,34 @@ class ImportJob(models.Model):
 
     def __str__(self):
         return f"Import Job: {self.name} ({self.status})"
+
+
+class PairScore(models.Model):
+    """Computed match scores between mentor-mentee pairs."""
+
+    cohort = models.ForeignKey(
+        "core.Cohort", on_delete=models.CASCADE, related_name="pair_scores"
+    )
+    mentor = models.ForeignKey(
+        Participant, on_delete=models.CASCADE, related_name="mentor_scores"
+    )
+    mentee = models.ForeignKey(
+        Participant, on_delete=models.CASCADE, related_name="mentee_scores"
+    )
+    score = models.FloatField(help_text="Overall match percentage (0-100)")
+    score_breakdown = models.JSONField(
+        default=dict, help_text="Detailed breakdown of score components"
+    )
+    computed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("mentor", "mentee")
+        verbose_name_plural = "Pair Scores"
+        indexes = [
+            models.Index(fields=["cohort", "-score"]),
+            models.Index(fields=["mentor", "-score"]),
+            models.Index(fields=["mentee", "-score"]),
+        ]
+
+    def __str__(self):
+        return f"{self.mentor.display_name} <-> {self.mentee.display_name}: {self.score:.1f}%"
