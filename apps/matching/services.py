@@ -3,6 +3,7 @@
 import hashlib
 import json
 import logging
+import time
 from typing import Dict, List, Any
 from django.utils import timezone
 from apps.core.models import Cohort, Participant
@@ -56,6 +57,7 @@ def run_strict_matching(cohort: Cohort, user) -> MatchRun:
         MatchRun object with results
     """
     logger.info(f"Running strict matching for cohort {cohort.id}")
+    start_time = time.time()
 
     # Create match run record
     match_run = MatchRun.objects.create(
@@ -116,6 +118,10 @@ def run_strict_matching(cohort: Cohort, user) -> MatchRun:
             # Detect ambiguities
             ambiguities = detect_ambiguity(matches_data, mentors, mentees, scores)
 
+            # Calculate total duration
+            end_time = time.time()
+            total_duration = end_time - start_time
+
             # Update match run
             match_run.status = "SUCCESS"
             match_run.objective_summary = {
@@ -124,8 +130,11 @@ def run_strict_matching(cohort: Cohort, user) -> MatchRun:
                 "match_count": len(matches_data),
                 "ambiguity_count": len(ambiguities),
                 "solve_time": solve_time,
+                "total_duration": total_duration,
             }
             match_run.save()
+
+            logger.info(f"Strict matching completed for cohort {cohort.id} in {total_duration:.2f}s with {len(matches_data)} matches")
 
             # Create match records
             for match_data in matches_data:
@@ -186,6 +195,7 @@ def run_exception_matching(cohort: Cohort, user) -> MatchRun:
         MatchRun object with results
     """
     logger.info(f"Running exception matching for cohort {cohort.id}")
+    start_time = time.time()
 
     # Create match run record
     match_run = MatchRun.objects.create(
@@ -248,6 +258,10 @@ def run_exception_matching(cohort: Cohort, user) -> MatchRun:
             # Detect ambiguities (even in exception mode)
             ambiguities = detect_ambiguity(matches_data, mentors, mentees, scores)
 
+            # Calculate total duration
+            end_time = time.time()
+            total_duration = end_time - start_time
+
             # Update match run
             match_run.status = "SUCCESS"
             match_run.objective_summary = {
@@ -258,8 +272,11 @@ def run_exception_matching(cohort: Cohort, user) -> MatchRun:
                 "exception_count": exception_count,
                 "exception_summary": exception_summary,
                 "solve_time": solve_time,
+                "total_duration": total_duration,
             }
             match_run.save()
+
+            logger.info(f"Exception matching completed for cohort {cohort.id} in {total_duration:.2f}s with {len(matches_data)} matches and {exception_count} exceptions")
 
             # Create match records
             for match_data in matches_data:

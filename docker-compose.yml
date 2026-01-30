@@ -31,5 +31,24 @@ services:
     depends_on:
       - db
 
+  test:
+    build: .
+    command: bash -c "playwright install-deps && playwright install chromium && pytest playwright_tests/ -v"
+    volumes:
+      - .:/app
+    environment:
+      POSTGRES_DB: matchlab
+      POSTGRES_USER: matchlab
+      POSTGRES_PASSWORD: matchlab
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      DJANGO_SECRET_KEY: test-secret-key
+      DJANGO_DEBUG: "True"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0
+      DJANGO_SETTINGS_MODULE: config.settings
+      DISPLAY: :99
+    depends_on:
+      - db
+
 volumes:
   postgres_data:

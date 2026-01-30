@@ -138,6 +138,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+# Ensure static files are collected properly
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 

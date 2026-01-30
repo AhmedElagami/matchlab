@@ -12,6 +12,7 @@ from apps.matching.services import (
     run_exception_matching,
     export_match_run_csv,
 )
+from apps.matching.export import export_match_run_xlsx
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +124,7 @@ def match_results_view(request, match_run_id):
 @login_required
 @user_passes_test(is_admin)
 def export_match_run_view(request, match_run_id):
-    """Export match run results as CSV."""
+    """Export match run results as CSV or XLSX."""
     match_run = get_object_or_404(MatchRun, id=match_run_id)
 
     # Verify user has access to this cohort
@@ -135,13 +136,26 @@ def export_match_run_view(request, match_run_id):
         messages.error(request, "Cannot export failed match run.")
         return redirect("admin_views:match_results", match_run_id=match_run_id)
 
-    # Generate CSV
-    csv_content = export_match_run_csv(match_run)
+    # Determine export format
+    export_format = request.GET.get("format", "csv")
+    
+    if export_format == "xlsx":
+        # Generate XLSX
+        xlsx_content = export_match_run_xlsx(match_run)
 
-    # Create response
-    response = HttpResponse(csv_content, content_type="text/csv")
-    response["Content-Disposition"] = (
-        f'attachment; filename="match_results_{match_run.id}.csv"'
-    )
+        # Create response
+        response = HttpResponse(xlsx_content, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = (
+            f'attachment; filename="match_results_{match_run.id}.xlsx"'
+        )
+    else:
+        # Generate CSV
+        csv_content = export_match_run_csv(match_run)
+
+        # Create response
+        response = HttpResponse(csv_content, content_type="text/csv")
+        response["Content-Disposition"] = (
+            f'attachment; filename="match_results_{match_run.id}.csv"'
+        )
 
     return response
