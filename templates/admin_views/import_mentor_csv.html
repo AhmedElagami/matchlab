@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h2 class="mb-4">Import Mentor Profiles from CSV</h2>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Instructions</h5>
+                <ol>
+                    <li><a href="{% url 'admin_views:download_csv_template' %}" class="btn btn-outline-primary btn-sm">Download CSV Template</a></li>
+                    <li>Fill in the mentor data in the CSV file</li>
+                    <li>Upload the completed CSV file using the form below</li>
+                    <li>Review the preview of valid and invalid rows</li>
+                    <li>Confirm the import to apply changes</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upload CSV File</h5>
+                
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.csv_file.id_for_label }}" class="form-label">{{ form.csv_file.label }}</label>
+                        {{ form.csv_file }}
+                        {% if form.csv_file.help_text %}
+                            <div class="form-text">{{ form.csv_file.help_text }}</div>
+                        {% endif %}
+                        {% if form.csv_file.errors %}
+                            <div class="text-danger">
+                                {% for error in form.csv_file.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-testid="csv-upload-submit">Upload CSV</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <h2 class="mb-4">CSV Import Preview</h2>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="alert alert-success">
+                    <strong>Valid Rows: {{ valid_rows|length }}</strong>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="alert alert-warning">
+                    <strong>Invalid Rows: {{ invalid_rows|length }}</strong>
+                </div>
+            </div>
+        </div>
+        
+        {% if valid_rows %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Valid Rows (Will be Imported)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" data-testid="csv-preview-table">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Organization</th>
+                                <th>Job Title</th>
+                                <th>Function</th>
+                                <th>Expertise Tags</th>
+                                <th>Location</th>
+                                <th>Years Exp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in valid_rows %}
+                            <tr>
+                                <td>{{ row.mentor_email }}</td>
+                                <td>{{ row.organization }}</td>
+                                <td>{{ row.job_title }}</td>
+                                <td>{{ row.function }}</td>
+                                <td>{{ row.expertise_tags }}</td>
+                                <td>{{ row.location }}</td>
+                                <td>{{ row.years_experience }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if invalid_rows %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Invalid Rows (Will NOT be Imported)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Row #</th>
+                                <th>Email</th>
+                                <th>Organization</th>
+                                <th>Errors</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in invalid_rows %}
+                            <tr>
+                                <td>{{ row.row_number }}</td>
+                                <td>{{ row.mentor_email }}</td>
+                                <td>{{ row.organization }}</td>
+                                <td>
+                                    {% for error in row.errors_list %}
+                                        <span class="badge bg-danger me-1">{{ error }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'admin_views:import_mentor_csv' %}" class="btn btn-secondary">Back to Upload</a>
+            
+            {% if valid_rows %}
+            <form method="post" action="{% url 'admin_views:confirm_import' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success" data-testid="csv-import-confirm-btn">
+                    Confirm and Import {{ valid_rows|length }} Rows
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h2 class="mb-4">Desired Mentor Attributes</h2>
+        <p class="lead">Cohort: {{ cohort.name }}</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Tell us about your ideal mentor</h5>
+                <p class="text-muted">These preferences will help us find the best matches for you.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.desired_tags.id_for_label }}" class="form-label">{{ form.desired_tags.label }}</label>
+                        {{ form.desired_tags }}
+                        {% if form.desired_tags.help_text %}
+                            <div class="form-text">{{ form.desired_tags.help_text }}</div>
+                        {% endif %}
+                        {% if form.desired_tags.errors %}
+                            <div class="text-danger">
+                                {% for error in form.desired_tags.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Additional Preferences</label>
+                        {% for field in form %}
+                            {% if "desired_attr_" in field.name %}
+                                <div class="form-check">
+                                    {{ field }}
+                                    <label class="form-check-label" for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if form.non_field_errors %}
+                            <div class="text-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                            <div class="text-danger">
+                                {% for error in form.notes.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

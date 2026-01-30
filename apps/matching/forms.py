@@ -67,6 +67,16 @@ class PreferencesForm(forms.Form):
                 if rank is not None:
                     ranks_data.append((rank, candidate))
 
+            # Sort by rank and then by candidate id for consistency
+            ranks_data.sort(key=lambda x: (x[0], x[1].id))
+
+            # Debug logging
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.info(f"Saving preferences for participant {self.participant.id}")
+            logger.info(f"Ranks data: {ranks_data}")
+
             # Sort by rank and then by candidate id (to ensure consistent ordering for duplicates)
             ranks_data.sort(key=lambda x: (x[0], x[1].id))
 

@@ -33,4 +33,5 @@ urlpatterns = [
     ),
     path("", include("apps.core.urls")),
     path("", include("apps.matching.urls")),
+    path("", include("apps.admin_views.urls")),
 ]

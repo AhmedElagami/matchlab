@@ -2,6 +2,21 @@
 {% load matching_extras %}
 
 {% block content %}
+<style>
+.dragging {
+    opacity: 0.5;
+    background-color: #f8f9fa;
+}
+
+.candidate-row:hover {
+    background-color: #f8f9fa;
+}
+
+.candidate-row.dragging {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+</style>
 <div class="row">
     <div class="col-12">
         <h2>Preferences - {{ cohort.name }}</h2>
@@ -26,8 +41,8 @@
                     </div>
                 </div>
                 <small class="text-muted">
-                    Rank candidates in order of preference (1 = highest preference). 
-                    Leave blank for candidates you do not wish to match with.
+                    Drag and drop candidates to reorder them by preference (top = highest preference).
+                    Candidates at the bottom will not be matched.
                 </small>
             </div>
             <div class="card-body">
@@ -44,45 +59,40 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
+                                    <th>Drag to Reorder</th>
                                     <th>Candidate</th>
                                     <th>Organization</th>
-                                    <th>Rank</th>
+                                    <th>Preference Order</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="sortable-candidates">
                                 {% for candidate in candidates %}
-                                <tr>
+                                <tr class="candidate-row" data-candidate-id="{{ candidate.id }}">
+                                    <td style="width: 40px; cursor: move;">
+                                        <i class="bi bi-grip-vertical text-muted"></i>
+                                    </td>
                                     <td>{{ candidate.display_name }}</td>
                                     <td>{{ candidate.organization }}</td>
-                                    <td style="width: 150px;">
-                                        <input type="number" 
-                                               class="form-control" 
-                                               name="candidate_{{ candidate.id }}" 
-                                               id="id_candidate_{{ candidate.id }}"
-                                               value="{{ form.initial|get_item:'candidate_'|get_item:candidate.id|default_if_none:'' }}"
-                                               min="1"
-                                               data-testid="pref-rank-input-{{ candidate.id }}">
+                                    <td class="rank-display">
+                                        {% if form.initial|get_item:'candidate_'|get_item:candidate.id %}
+                                            #{{ form.initial|get_item:'candidate_'|get_item:candidate.id }}
+                                        {% else %}
+                                            Not ranked
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
                                 
                                 {% if blocked_candidates %}
                                 <tr class="table-warning">
-                                    <td colspan="3" class="fw-bold">Blocked Candidates (Same Organization)</td>
+                                    <td colspan="4" class="fw-bold">Blocked Candidates (Same Organization)</td>
                                 </tr>
                                 {% for candidate in blocked_candidates %}
                                 <tr class="table-light">
+                                    <td><i class="bi bi-x-circle text-muted"></i></td>
                                     <td>{{ candidate.display_name }}</td>
                                     <td>{{ candidate.organization }}</td>
                                     <td>
-                                        <input type="number" 
-                                               class="form-control" 
-                                               name="candidate_{{ candidate.id }}" 
-                                               id="id_candidate_{{ candidate.id }}"
-                                               value="{{ form.initial|get_item:'candidate_'|get_item:candidate.id|default_if_none:'' }}"
-                                               min="1"
-                                               disabled
-                                               data-testid="pref-rank-input-{{ candidate.id }}">
                                         <small class="text-muted">Blocked (same organization)</small>
                                     </td>
                                 </tr>
@@ -92,7 +102,15 @@
                         </table>
                     </div>
                     
-                    <div class="d-flex justify-content-between">
+                    <!-- Hidden inputs to store the actual rank values -->
+                    {% for candidate in candidates %}
+                    <input type="hidden" 
+                           name="candidate_{{ candidate.id }}" 
+                           id="rank_{{ candidate.id }}"
+                           value="{{ form.initial|get_item:'candidate_'|get_item:candidate.id|default_if_none:'' }}">
+                    {% endfor %}
+                    
+                    <div class="d-flex justify-content-between mt-3">
                         <button type="submit" class="btn btn-primary" data-testid="save-preferences-btn">
                             <i class="bi bi-save"></i> Save Preferences
                         </button>
@@ -101,7 +119,9 @@
                                 class="btn btn-success" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#submitModal"
-                                data-testid="submit-preferences-btn">
+                                data-testid="submit-preferences-btn"
+                                id="submit-btn"
+                                disabled>
                             <i class="bi bi-check-circle"></i> Submit Preferences
                         </button>
                     </div>
@@ -139,11 +159,117 @@
 
 {% block extra_js %}
 <script>
-// Auto-focus first rank input
 document.addEventListener('DOMContentLoaded', function() {
-    const firstInput = document.querySelector('[data-testid^="pref-rank-input-"]');
-    if (firstInput) {
-        firstInput.focus();
+    const sortableTable = document.getElementById('sortable-candidates');
+    const saveBtn = document.querySelector('[data-testid="save-preferences-btn"]');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Track if preferences have been explicitly saved by the user
+    let preferencesExplicitlySaved = false;
+    
+    if (sortableTable) {
+        // Make rows draggable
+        const rows = sortableTable.querySelectorAll('.candidate-row');
+        
+        rows.forEach(row => {
+            // Make the row draggable
+            row.setAttribute('draggable', true);
+            
+            row.addEventListener('dragstart', function(e) {
+                e.dataTransfer.effectAllowed = 'move';
+                this.classList.add('dragging');
+                // Add some data to make Firefox happy
+                e.dataTransfer.setData('text/plain', '');
+            });
+            
+            row.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                updateRanks();
+            });
+        });
+        
+        // Add dragover event to the container
+        sortableTable.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            const draggingRow = document.querySelector('.candidate-row.dragging');
+            if (!draggingRow) return;
+            
+            const afterElement = getDragAfterElement(sortableTable, e.clientY);
+            if (afterElement === draggingRow) return;
+            
+            if (afterElement == null) {
+                sortableTable.appendChild(draggingRow);
+            } else {
+                sortableTable.insertBefore(draggingRow, afterElement);
+            }
+        });
+        
+        // Add dragenter event for visual feedback
+        sortableTable.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+        });
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.candidate-row:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        // Update rank display and hidden inputs when order changes
+        function updateRanks() {
+            const rows = sortableTable.querySelectorAll('.candidate-row');
+            rows.forEach((row, index) => {
+                const candidateId = row.getAttribute('data-candidate-id');
+                const rankDisplay = row.querySelector('.rank-display');
+                const hiddenInput = document.getElementById('rank_' + candidateId);
+                
+                if (rankDisplay && hiddenInput) {
+                    const rank = index + 1;
+                    rankDisplay.textContent = '#' + rank;
+                    hiddenInput.value = rank;
+                    
+                    // Trigger change event to ensure form validation
+                    hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        }
+        
+        // Initialize ranks on page load
+        updateRanks();
+    }
+    
+    // Enable submit button after saving
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            preferencesExplicitlySaved = true;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Initially disable submit button
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        
+        // Check if preferences have been saved (looking for success messages)
+        const successMessages = document.querySelectorAll('[data-testid="alert-message"].alert-success');
+        for (let message of successMessages) {
+            if (message.textContent.includes('Preferences saved successfully')) {
+                submitBtn.disabled = false;
+                break;
+            }
+        }
     }
 });
 </script>
