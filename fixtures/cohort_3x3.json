@@ -1,0 +1,185 @@
+[
+  {
+    "model": "core.cohort",
+    "pk": 1,
+    "fields": {
+      "name": "Test Cohort 3x3",
+      "status": "OPEN",
+      "created_at": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "mentor1",
+      "first_name": "Mentor",
+      "last_name": "One",
+      "email": "mentor1@example.com",
+      "password": "pbkdf2_sha256$600000$test$test==",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "mentor2",
+      "first_name": "Mentor",
+      "last_name": "Two",
+      "email": "mentor2@example.com",
+      "password": "pbkdf2_sha256$600000$test$test==",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "mentor3",
+      "first_name": "Mentor",
+      "last_name": "Three",
+      "email": "mentor3@example.com",
+      "password": "pbkdf2_sha256$600000$test$test==",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "mentee1",
+      "first_name": "Mentee",
+      "last_name": "One",
+      "email": "mentee1@example.com",
+      "password": "pbkdf2_sha256$600000$test$test==",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "username": "mentee2",
+      "first_name": "Mentee",
+      "last_name": "Two",
+      "email": "mentee2@example.com",
+      "password": "pbkdf2_sha256$600000$test$test==",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "username": "mentee3",
+      "first_name": "Mentee",
+      "last_name": "Three",
+      "email": "mentee3@example.com",
+      "password": "pbkdf2_sha256$600000$test$test==",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 1,
+    "fields": {
+      "cohort": 1,
+      "user": 1,
+      "role_in_cohort": "MENTOR",
+      "display_name": "Mentor One",
+      "organization": "OrgA",
+      "is_submitted": false,
+      "created_at": "2026-01-30T10:00:00Z",
+      "updated_at": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 2,
+    "fields": {
+      "cohort": 1,
+      "user": 2,
+      "role_in_cohort": "MENTOR",
+      "display_name": "Mentor Two",
+      "organization": "OrgB",
+      "is_submitted": false,
+      "created_at": "2026-01-30T10:00:00Z",
+      "updated_at": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 3,
+    "fields": {
+      "cohort": 1,
+      "user": 3,
+      "role_in_cohort": "MENTOR",
+      "display_name": "Mentor Three",
+      "organization": "OrgC",
+      "is_submitted": false,
+      "created_at": "2026-01-30T10:00:00Z",
+      "updated_at": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 4,
+    "fields": {
+      "cohort": 1,
+      "user": 4,
+      "role_in_cohort": "MENTEE",
+      "display_name": "Mentee One",
+      "organization": "OrgB",
+      "is_submitted": false,
+      "created_at": "2026-01-30T10:00:00Z",
+      "updated_at": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 5,
+    "fields": {
+      "cohort": 1,
+      "user": 5,
+      "role_in_cohort": "MENTEE",
+      "display_name": "Mentee Two",
+      "organization": "OrgC",
+      "is_submitted": false,
+      "created_at": "2026-01-30T10:00:00Z",
+      "updated_at": "2026-01-30T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 6,
+    "fields": {
+      "cohort": 1,
+      "user": 6,
+      "role_in_cohort": "MENTEE",
+      "display_name": "Mentee Three",
+      "organization": "OrgA",
+      "is_submitted": false,
+      "created_at": "2026-01-30T10:00:00Z",
+      "updated_at": "2026-01-30T10:00:00Z"
+    }
+  }
+]

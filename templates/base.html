@@ -19,7 +19,7 @@
                 <span class="navbar-text me-3">
                     Welcome, {{ user.username }}!
                 </span>
-                <a class="nav-link" href="{% url 'core:logout' %}" data-testid="logout-link">Logout</a>
+                <a class="nav-link" href="{% url 'logout' %}" data-testid="logout-link">Logout</a>
             </div>
             {% endif %}
         </div>

@@ -26,6 +26,11 @@ urlpatterns = [
         auth_views.LoginView.as_view(template_name="auth/login.html"),
         name="login",
     ),
-    path("auth/logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path(
+        "auth/logout/",
+        auth_views.LogoutView.as_view(next_page="/auth/login/"),
+        name="logout",
+    ),
     path("", include("apps.core.urls")),
+    path("", include("apps.matching.urls")),
 ]

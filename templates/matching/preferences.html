@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load matching_extras %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Preferences - {{ cohort.name }}</h2>
+        <p class="lead">Rank your preferred {{ participant.get_role_in_cohort_display|lower }} matches</p>
+        
+        {% if participant.is_submitted %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Your preferences have been submitted and are now locked.
+            </div>
+        {% endif %}
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Rank Candidates</h5>
+                    <div>
+                        <a href="?show_blocked=true" 
+                           class="btn btn-sm btn-outline-secondary {% if show_blocked %}active{% endif %}" 
+                           data-testid="show-blocked-toggle">
+                            Show Blocked
+                        </a>
+                    </div>
+                </div>
+                <small class="text-muted">
+                    Rank candidates in order of preference (1 = highest preference). 
+                    Leave blank for candidates you do not wish to match with.
+                </small>
+            </div>
+            <div class="card-body">
+                <form method="post" id="preferences-form">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Candidate</th>
+                                    <th>Organization</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for candidate in candidates %}
+                                <tr>
+                                    <td>{{ candidate.display_name }}</td>
+                                    <td>{{ candidate.organization }}</td>
+                                    <td style="width: 150px;">
+                                        <input type="number" 
+                                               class="form-control" 
+                                               name="candidate_{{ candidate.id }}" 
+                                               id="id_candidate_{{ candidate.id }}"
+                                               value="{{ form.initial|get_item:'candidate_'|get_item:candidate.id|default_if_none:'' }}"
+                                               min="1"
+                                               data-testid="pref-rank-input-{{ candidate.id }}">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                                {% if blocked_candidates %}
+                                <tr class="table-warning">
+                                    <td colspan="3" class="fw-bold">Blocked Candidates (Same Organization)</td>
+                                </tr>
+                                {% for candidate in blocked_candidates %}
+                                <tr class="table-light">
+                                    <td>{{ candidate.display_name }}</td>
+                                    <td>{{ candidate.organization }}</td>
+                                    <td>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               name="candidate_{{ candidate.id }}" 
+                                               id="id_candidate_{{ candidate.id }}"
+                                               value="{{ form.initial|get_item:'candidate_'|get_item:candidate.id|default_if_none:'' }}"
+                                               min="1"
+                                               disabled
+                                               data-testid="pref-rank-input-{{ candidate.id }}">
+                                        <small class="text-muted">Blocked (same organization)</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary" data-testid="save-preferences-btn">
+                            <i class="bi bi-save"></i> Save Preferences
+                        </button>
+                        
+                        <button type="button" 
+                                class="btn btn-success" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#submitModal"
+                                data-testid="submit-preferences-btn">
+                            <i class="bi bi-check-circle"></i> Submit Preferences
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Submit Confirmation Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="submitModalLabel">Confirm Submission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to submit your preferences?</p>
+                <p class="text-danger"><strong>Important:</strong> Once submitted, you will not be able to edit your preferences.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'matching:submit_preferences' cohort_id=cohort.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" data-testid="confirm-submit-btn">
+                        Confirm Submission
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-focus first rank input
+document.addEventListener('DOMContentLoaded', function() {
+    const firstInput = document.querySelector('[data-testid^="pref-rank-input-"]');
+    if (firstInput) {
+        firstInput.focus();
+    }
+});
+</script>
+{% endblock %}

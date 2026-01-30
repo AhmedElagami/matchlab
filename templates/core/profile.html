@@ -6,6 +6,12 @@
         <h2>Profile - {{ cohort.name }}</h2>
         <p class="lead">Update your profile information</p>
         
+        {% if participant.is_submitted %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Your preferences have been submitted and are now locked.
+        </div>
+        {% endif %}
+        
         <div class="card">
             <div class="card-body">
                 <form method="post">
@@ -36,6 +42,12 @@
                     <button type="submit" class="btn btn-primary" data-testid="save-profile-button">Save Changes</button>
                 </form>
             </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'matching:preferences' cohort_id=cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-list-ol"></i> Manage Preferences
+            </a>
         </div>
     </div>
 </div>
