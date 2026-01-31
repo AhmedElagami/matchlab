@@ -2,10 +2,12 @@ from django.urls import path
 from . import views
 from . import run_matching
 from . import override_views
+from . import admin_dashboard
 
 app_name = "admin_views"
 
 urlpatterns = [
+    path("dashboard/", admin_dashboard.admin_dashboard_view, name="admin_dashboard"),
     path("import/mentor-csv/", views.import_mentor_csv_view, name="import_mentor_csv"),
     path("import/confirm/", views.confirm_import_view, name="confirm_import"),
     path(

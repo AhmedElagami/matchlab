@@ -3,7 +3,12 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h2>My Match - {{ cohort.name }}</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">My Match - {{ cohort.name }}</h2>
+            <a href="{% url 'core:profile' cohort_id=cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Profile
+            </a>
+        </div>
         
         {% if match %}
         <div class="card" data-testid="my-match-card">

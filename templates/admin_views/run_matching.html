@@ -3,7 +3,33 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h2>Run Matching - {{ cohort.name }}</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Run Matching - {{ cohort.name }}</h2>
+            <a href="{% url 'admin_views:cohort_dashboard' cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin_views:cohort_dashboard' cohort.id %}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'admin_views:run_matching' cohort.id %}">
+                    <i class="bi bi-shuffle"></i> Run Matching
+                </a>
+            </li>
+            {% if cohort.match_runs.exists %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin_views:match_results' cohort.match_runs.first.id %}">
+                    <i class="bi bi-bar-chart"></i> Results
+                </a>
+            </li>
+            {% endif %}
+        </ul>
         
         <div class="card mb-4">
             <div class="card-header">

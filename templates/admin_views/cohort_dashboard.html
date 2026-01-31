@@ -3,7 +3,35 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2 class="mb-4">Cohort Dashboard: {{ cohort.name }}</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Cohort Dashboard: {{ cohort.name }}</h2>
+            <div>
+                <a href="{% url 'admin_views:run_matching' cohort.id %}" class="btn btn-primary" data-testid="run-matching-btn">
+                    <i class="bi bi-play-circle"></i> Run Matching
+                </a>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'admin_views:cohort_dashboard' cohort.id %}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin_views:run_matching' cohort.id %}">
+                    <i class="bi bi-shuffle"></i> Run Matching
+                </a>
+            </li>
+            {% if cohort.match_runs.exists %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin_views:match_results' cohort.match_runs.first.id %}">
+                    <i class="bi bi-bar-chart"></i> Results
+                </a>
+            </li>
+            {% endif %}
+        </ul>
         
         <!-- Readiness Status Card -->
         <div class="card mb-4">

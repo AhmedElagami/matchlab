@@ -33,9 +33,11 @@ def preferences_view(request, cohort_id):
         opposite_role = "MENTOR"
 
     # Get candidates (participants in same cohort with opposite role)
-    candidates = Participant.objects.filter(
-        cohort=cohort, role_in_cohort=opposite_role
-    ).order_by("display_name")
+    candidates = (
+        Participant.objects.filter(cohort=cohort, role_in_cohort=opposite_role)
+        .select_related("mentor_profile", "mentee_profile")
+        .order_by("display_name")
+    )
 
     # Handle show_blocked toggle
     show_blocked = request.GET.get("show_blocked", "false") == "true"
@@ -43,11 +45,15 @@ def preferences_view(request, cohort_id):
     # Filter out same organization unless show_blocked is True
     if not show_blocked:
         candidates = candidates.exclude(organization=participant.organization)
-        blocked_candidates = Participant.objects.filter(
-            cohort=cohort,
-            role_in_cohort=opposite_role,
-            organization=participant.organization,
-        ).order_by("display_name")
+        blocked_candidates = (
+            Participant.objects.filter(
+                cohort=cohort,
+                role_in_cohort=opposite_role,
+                organization=participant.organization,
+            )
+            .select_related("mentor_profile", "mentee_profile")
+            .order_by("display_name")
+        )
     else:
         blocked_candidates = []
 
@@ -85,7 +91,7 @@ def preferences_view(request, cohort_id):
 
     return render(
         request,
-        "matching/preferences.html",
+        "matching/preferences_improved.html",  # Updated template
         {
             "form": form,
             "cohort": cohort,

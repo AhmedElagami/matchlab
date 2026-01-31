@@ -18,14 +18,35 @@
             <a class="navbar-brand" href="{% url 'core:home' %}">Mentor-Mentee Matchmaker</a>
             
             {% if user.is_authenticated %}
-            <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3">
-                    Welcome, {{ user.username }}!
-                </span>
-                <form method="post" action="{% url 'logout' %}" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link nav-link" data-testid="logout-link">Logout</button>
-                </form>
+            <!-- Main Navigation Menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:home' %}">Home</a>
+                    </li>
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_views:import_mentor_csv' %}">Import Mentors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_views:download_csv_template' %}">Download Template</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <!-- User Info and Logout -->
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text me-3">
+                        Welcome, {{ user.username }}!
+                    </span>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link nav-link" data-testid="logout-link">Logout</button>
+                    </form>
+                </div>
             </div>
             {% endif %}
         </div>

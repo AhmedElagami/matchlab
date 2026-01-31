@@ -3,8 +3,15 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2>Profile - {{ cohort.name }}</h2>
-        <p class="lead">Update your profile information</p>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">Profile - {{ cohort.name }}</h2>
+                <p class="lead mb-0">Update your profile information</p>
+            </div>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Cohorts
+            </a>
+        </div>
         
         {% if participant.is_submitted %}
         <div class="alert alert-info">
@@ -12,38 +19,162 @@
         </div>
         {% endif %}
         
-        <div class="card">
+        <!-- Basic Info Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Basic Information</h5>
+            </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" action="{% url 'core:profile' cohort_id=cohort.id %}">
                     {% csrf_token %}
+                    <input type="hidden" name="form_type" value="basic">
                     
-                    <div class="mb-3">
-                        <label for="{{ form.display_name.id_for_label }}" class="form-label">{{ form.display_name.label }}</label>
-                        {{ form.display_name }}
-                        {% if form.display_name.help_text %}
-                            <div class="form-text">{{ form.display_name.help_text }}</div>
-                        {% endif %}
-                        {% if form.display_name.errors %}
-                            <div class="text-danger">{{ form.display_name.errors }}</div>
-                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.display_name.id_for_label }}" class="form-label">{{ form.display_name.label }}</label>
+                            {{ form.display_name }}
+                            {% if form.display_name.help_text %}
+                                <div class="form-text">{{ form.display_name.help_text }}</div>
+                            {% endif %}
+                            {% if form.display_name.errors %}
+                                <div class="text-danger">{{ form.display_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.organization.id_for_label }}" class="form-label">{{ form.organization.label }}</label>
+                            {{ form.organization }}
+                            {% if form.organization.help_text %}
+                                <div class="form-text">{{ form.organization.help_text }}</div>
+                            {% endif %}
+                            {% if form.organization.errors %}
+                                <div class="text-danger" data-testid="organization-error">{{ form.organization.errors }}</div>
+                            {% endif %}
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="{{ form.organization.id_for_label }}" class="form-label">{{ form.organization.label }}</label>
-                        {{ form.organization }}
-                        {% if form.organization.help_text %}
-                            <div class="form-text">{{ form.organization.help_text }}</div>
-                        {% endif %}
-                        {% if form.organization.errors %}
-                            <div class="text-danger" data-testid="organization-error">{{ form.organization.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" data-testid="save-profile-button">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" data-testid="save-profile-button">Save Basic Info</button>
                 </form>
             </div>
         </div>
         
+        <!-- Detailed Profile Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    {% if participant.role_in_cohort == "MENTOR" %}
+                        Mentor Profile Details
+                    {% else %}
+                        Mentee Profile Details
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'core:profile' cohort_id=cohort.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="detailed">
+                    
+                    {% if participant.role_in_cohort == "MENTOR" %}
+                        <!-- Mentor Profile Fields -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job_title" class="form-label">Job Title</label>
+                                <input type="text" class="form-control" id="job_title" name="job_title" 
+                                       value="{{ mentor_profile.job_title|default:'' }}"
+                                       placeholder="e.g., Senior Software Engineer">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="function" class="form-label">Function/Department</label>
+                                <input type="text" class="form-control" id="function" name="function" 
+                                       value="{{ mentor_profile.function|default:'' }}"
+                                       placeholder="e.g., Engineering, Product, Design">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" 
+                                       value="{{ mentor_profile.location|default:'' }}"
+                                       placeholder="e.g., San Francisco, Remote">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="years_experience" class="form-label">Years of Experience</label>
+                                <input type="number" class="form-control" id="years_experience" name="years_experience" 
+                                       value="{{ mentor_profile.years_experience|default:'' }}"
+                                       min="0" max="50">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="expertise_tags" class="form-label">Expertise Tags</label>
+                            <input type="text" class="form-control" id="expertise_tags" name="expertise_tags" 
+                                   value="{{ mentor_profile.expertise_tags|default:'' }}"
+                                   placeholder="e.g., python, javascript, machine-learning, leadership">
+                            <div class="form-text">Comma-separated list of your areas of expertise</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="languages" class="form-label">Languages</label>
+                            <input type="text" class="form-control" id="languages" name="languages" 
+                                   value="{{ mentor_profile.languages|default:'' }}"
+                                   placeholder="e.g., english, spanish, mandarin">
+                            <div class="form-text">Comma-separated list of languages you speak</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="coaching_topics" class="form-label">Coaching Topics</label>
+                            <input type="text" class="form-control" id="coaching_topics" name="coaching_topics" 
+                                   value="{{ mentor_profile.coaching_topics|default:'' }}"
+                                   placeholder="e.g., career development, technical leadership, work-life balance">
+                            <div class="form-text">Comma-separated list of topics you can help with</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="4" 
+                                      placeholder="Tell mentees about yourself, your experience, and what you can offer...">{{ mentor_profile.bio|default:'' }}</textarea>
+                        </div>
+                        
+                    {% else %}
+                        <!-- Mentee Profile Fields -->
+                        <div class="mb-3">
+                            <label for="preferred_expertise" class="form-label">Preferred Mentor Expertise</label>
+                            <input type="text" class="form-control" id="preferred_expertise" name="preferred_expertise" 
+                                   value="{{ mentee_profile.desired_attributes.preferred_expertise|join:', '|default:'' }}"
+                                   placeholder="e.g., python, leadership, career growth">
+                            <div class="form-text">Comma-separated list of expertise you're looking for in a mentor</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="preferred_location" class="form-label">Preferred Location</label>
+                                <input type="text" class="form-control" id="preferred_location" name="preferred_location" 
+                                       value="{{ mentee_profile.desired_attributes.preferred_location|default:'' }}"
+                                       placeholder="e.g., San Francisco, Remote, Any">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="preferred_languages" class="form-label">Preferred Languages</label>
+                                <input type="text" class="form-control" id="preferred_languages" name="preferred_languages" 
+                                       value="{{ mentee_profile.desired_attributes.preferred_languages|join:', '|default:'' }}"
+                                       placeholder="e.g., english, spanish">
+                                <div class="form-text">Comma-separated list of languages you prefer</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                      placeholder="Tell mentors about what you're looking for, your goals, and what kind of guidance you need...">{{ mentee_profile.notes|default:'' }}</textarea>
+                        </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="btn btn-primary">Save Profile Details</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Actions -->
         <div class="mt-4">
             <a href="{% url 'matching:preferences' cohort_id=cohort.id %}" class="btn btn-secondary me-2">
                 <i class="bi bi-list-ol"></i> Manage Preferences

@@ -39,16 +39,64 @@ def import_mentor_csv_view(request):
                 )
 
             # Store parsed data in session for confirmation step
-            request.session["csv_valid_rows"] = parser.valid_rows
-            request.session["csv_invalid_rows"] = parser.invalid_rows
+            # Convert participant objects to serializable data
+            valid_rows_serializable = []
+            for row in parser.valid_rows:
+                row_copy = row.copy()
+                if "participant_obj" in row_copy:
+                    # Store only the participant ID instead of the object
+                    row_copy["participant_id"] = row_copy["participant_obj"].id
+                    del row_copy["participant_obj"]
+                valid_rows_serializable.append(row_copy)
+
+            invalid_rows_serializable = []
+            for row in parser.invalid_rows:
+                row_copy = row.copy()
+                if "participant_obj" in row_copy:
+                    # Store only the participant ID instead of the object
+                    row_copy["participant_id"] = row_copy["participant_obj"].id
+                    del row_copy["participant_obj"]
+                invalid_rows_serializable.append(row_copy)
+
+            request.session["csv_valid_rows"] = valid_rows_serializable
+            request.session["csv_invalid_rows"] = invalid_rows_serializable
 
             # Render preview
+            # Reconstruct participant objects for display
+            valid_rows_with_objects = []
+            for row in valid_rows_serializable:
+                row_copy = row.copy()
+                if "participant_id" in row_copy:
+                    try:
+                        participant = Participant.objects.get(
+                            id=row_copy["participant_id"]
+                        )
+                        row_copy["participant_obj"] = participant
+                        del row_copy["participant_id"]
+                    except Participant.DoesNotExist:
+                        row_copy["participant_obj"] = None
+                valid_rows_with_objects.append(row_copy)
+
+            invalid_rows_with_objects = []
+            for row in invalid_rows_serializable:
+                row_copy = row.copy()
+                if "participant_id" in row_copy:
+                    try:
+                        participant = Participant.objects.get(
+                            id=row_copy["participant_id"]
+                        )
+                        row_copy["participant_obj"] = participant
+                        del row_copy["participant_id"]
+                    except Participant.DoesNotExist:
+                        row_copy["participant_obj"] = None
+                invalid_rows_with_objects.append(row_copy)
+
             return render(
                 request,
                 "admin_views/csv_preview.html",
                 {
-                    "valid_rows": parser.valid_rows,
-                    "invalid_rows": parser.invalid_rows,
+                    "valid_rows": valid_rows_with_objects,
+                    "invalid_rows": invalid_rows_with_objects,
                     "form": form,
                 },
             )
@@ -74,9 +122,26 @@ def confirm_import_view(request):
         messages.error(request, "No data to import.")
         return redirect("admin_views:import_mentor_csv")
 
+    # Reconstruct participant objects from IDs
+    valid_rows_with_objects = []
+    for row in valid_rows:
+        row_copy = row.copy()
+        if "participant_id" in row_copy:
+            try:
+                participant = Participant.objects.get(id=row_copy["participant_id"])
+                row_copy["participant_obj"] = participant
+                del row_copy["participant_id"]
+            except Participant.DoesNotExist:
+                messages.error(
+                    request,
+                    f"Participant with ID {row_copy['participant_id']} not found.",
+                )
+                return redirect("admin_views:import_mentor_csv")
+        valid_rows_with_objects.append(row_copy)
+
     # Process valid rows
     imported_count = 0
-    for row in valid_rows:
+    for row in valid_rows_with_objects:
         participant = row["participant_obj"]
 
         # Get or create mentor profile

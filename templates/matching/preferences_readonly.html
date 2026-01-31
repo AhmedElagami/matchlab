@@ -4,8 +4,15 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2>Preferences - {{ cohort.name }}</h2>
-        <p class="lead">Your submitted preferences (read-only)</p>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">Preferences - {{ cohort.name }}</h2>
+                <p class="lead mb-0">Your submitted preferences (read-only)</p>
+            </div>
+            <a href="{% url 'core:profile' cohort_id=cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Profile
+            </a>
+        </div>
         
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> Your preferences have been submitted and are now locked.

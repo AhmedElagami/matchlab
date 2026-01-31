@@ -16,6 +16,24 @@
     transform: scale(0.98);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
+.profile-card {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.tag-badge {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
 </style>
 <div class="row">
     <div class="col-12">
@@ -68,6 +86,7 @@
                                 <tr>
                                     <th>Drag to Reorder</th>
                                     <th>Candidate</th>
+                                    <th>Profile Details</th>
                                     <th>Organization</th>
                                     <th>Preference Order</th>
                                 </tr>
@@ -78,7 +97,63 @@
                                     <td style="width: 40px; cursor: move;">
                                         <i class="bi bi-grip-vertical text-muted"></i>
                                     </td>
-                                    <td>{{ candidate.display_name }}</td>
+                                    <td>
+                                        <strong>{{ candidate.display_name }}</strong>
+                                        {% if candidate.role_in_cohort == "MENTOR" %}
+                                            <br><small class="text-muted">Mentor</small>
+                                        {% else %}
+                                            <br><small class="text-muted">Mentee</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if candidate.role_in_cohort == "MENTOR" %}
+                                            {% if candidate.mentor_profile %}
+                                            <div class="profile-card">
+                                                <div><strong>{{ candidate.mentor_profile.job_title }}</strong></div>
+                                                <div class="text-muted">{{ candidate.mentor_profile.function }}</div>
+                                                {% if candidate.mentor_profile.get_expertise_tags_list %}
+                                                <div class="mt-1">
+                                                    <small><strong>Expertise:</strong></small>
+                                                    {% for tag in candidate.mentor_profile.get_expertise_tags_list %}
+                                                        <span class="tag-badge">{{ tag }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                {% if candidate.mentor_profile.location %}
+                                                <div><small><i class="bi bi-geo-alt"></i> {{ candidate.mentor_profile.location }}</small></div>
+                                                {% endif %}
+                                                {% if candidate.mentor_profile.years_experience %}
+                                                <div><small><i class="bi bi-calendar"></i> {{ candidate.mentor_profile.years_experience }} years exp</small></div>
+                                                {% endif %}
+                                                {% if candidate.mentor_profile.get_languages_list %}
+                                                <div>
+                                                    <small><i class="bi bi-translate"></i> 
+                                                    {% for lang in candidate.mentor_profile.get_languages_list %}
+                                                        {{ lang }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                    </small>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if candidate.mentee_profile %}
+                                            <div class="profile-card">
+                                                {% if candidate.mentee_profile.desired_attributes.preferred_expertise %}
+                                                <div>
+                                                    <small><strong>Desired Expertise:</strong></small>
+                                                    {% for topic in candidate.mentee_profile.desired_attributes.preferred_expertise %}
+                                                        <span class="tag-badge">{{ topic }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                {% if candidate.mentee_profile.desired_attributes.preferred_location %}
+                                                <div><small><i class="bi bi-geo-alt"></i> {{ candidate.mentee_profile.desired_attributes.preferred_location }}</small></div>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
                                     <td>{{ candidate.organization }}</td>
                                     <td class="rank-display">
                                         {% if form.initial|get_item:'candidate_'|get_item:candidate.id %}
@@ -92,12 +167,24 @@
                                 
                                 {% if blocked_candidates %}
                                 <tr class="table-warning">
-                                    <td colspan="4" class="fw-bold">Blocked Candidates (Same Organization)</td>
+                                    <td colspan="5" class="fw-bold">Blocked Candidates (Same Organization)</td>
                                 </tr>
                                 {% for candidate in blocked_candidates %}
                                 <tr class="table-light">
                                     <td><i class="bi bi-x-circle text-muted"></i></td>
                                     <td>{{ candidate.display_name }}</td>
+                                    <td>
+                                        {% if candidate.role_in_cohort == "MENTOR" and candidate.mentor_profile %}
+                                            <div class="profile-card">
+                                                <div><strong>{{ candidate.mentor_profile.job_title }}</strong></div>
+                                                <div class="text-muted">{{ candidate.mentor_profile.function }}</div>
+                                            </div>
+                                        {% elif candidate.mentee_profile %}
+                                            <div class="profile-card">
+                                                <small>Desired expertise information</small>
+                                            </div>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ candidate.organization }}</td>
                                     <td>
                                         <small class="text-muted">Blocked (same organization)</small>

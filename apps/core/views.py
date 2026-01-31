@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
+from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Cohort, Participant
-from .forms import ParticipantProfileForm
+from .forms import ParticipantProfileForm, RegistrationForm
 
 
 def logout_view(request):
@@ -11,8 +12,26 @@ def logout_view(request):
     return redirect("login")
 
 
+def register_view(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get("username")
+            messages.success(request, f"Account created for {username}!")
+            login(request, user)
+            return redirect("core:home")
+    else:
+        form = RegistrationForm()
+    return render(request, "registration/register.html", {"form": form})
+
+
 @login_required
 def home_view(request):
+    # If user is admin/staff, redirect to admin dashboard
+    if request.user.is_staff or request.user.is_superuser:
+        return redirect("admin_views:admin_dashboard")
+
     # Get all cohorts for the current user
     user_participations = Participant.objects.filter(user=request.user).select_related(
         "cohort"

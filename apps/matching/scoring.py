@@ -61,6 +61,7 @@ def compute_attribute_match_score(
 ) -> float:
     """
     Compute score based on mentee's desired attributes matching mentor's profile.
+    Handles both boolean flags and string/value matches.
     """
     if not mentee_desired_attributes:
         return 0.0
@@ -68,6 +69,7 @@ def compute_attribute_match_score(
     matched_count = 0
     total_count = 0
 
+    # Handle boolean attributes (existing logic)
     for attr_key, desired_value in mentee_desired_attributes.items():
         if isinstance(desired_value, bool) and desired_value:
             total_count += 1
@@ -75,6 +77,51 @@ def compute_attribute_match_score(
             mentor_value = mentor_profile_data.get(attr_key, False)
             if mentor_value:
                 matched_count += 1
+        elif isinstance(desired_value, str) and desired_value:
+            # Handle string attributes like preferred_location, preferred_languages
+            total_count += 1
+            mentor_value = mentor_profile_data.get(
+                attr_key.replace("preferred_", ""), ""
+            )
+            if isinstance(mentor_value, str) and mentor_value:
+                # Simple string match for location
+                if (
+                    "location" in attr_key.lower()
+                    and desired_value.lower() == mentor_value.lower()
+                ):
+                    matched_count += 1
+                # For languages, check if preferred language is in mentor's languages
+                elif "language" in attr_key.lower():
+                    mentor_languages = mentor_profile_data.get("languages", [])
+                    if (
+                        isinstance(mentor_languages, list)
+                        and desired_value in mentor_languages
+                    ):
+                        matched_count += 1
+        elif isinstance(desired_value, list) and desired_value:
+            # Handle list attributes like preferred_expertise
+            total_count += 1
+            mentor_value = mentor_profile_data.get(
+                attr_key.replace("preferred_", ""), []
+            )
+            if isinstance(mentor_value, list) and mentor_value:
+                # Compute overlap for lists (similar to tag overlap)
+                set1 = set(
+                    str(item).lower().strip()
+                    for item in desired_value
+                    if str(item).strip()
+                )
+                set2 = set(
+                    str(item).lower().strip()
+                    for item in mentor_value
+                    if str(item).strip()
+                )
+                if set1 and set2:
+                    intersection = len(set1.intersection(set2))
+                    union = len(set1.union(set2))
+                    if union > 0:
+                        # Add proportional match
+                        matched_count += intersection / union
 
     if total_count == 0:
         return 0.0
@@ -154,9 +201,7 @@ def compute_pair_score(
 
     # Compute tag overlap score
     mentor_expertise = mentor_data.get("expertise_tags", [])
-    mentee_topics = (
-        mentee_attrs.get("topics", "").split(",") if mentee_attrs.get("topics") else []
-    )
+    mentee_topics = mentee_attrs.get("preferred_expertise", [])
     tag_score = compute_tag_overlap_score(mentor_expertise, mentee_topics)
 
     # Compute attribute match score

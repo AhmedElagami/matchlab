@@ -3,8 +3,17 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h2>My Cohorts</h2>
-        <p>Select a cohort to continue:</p>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">My Cohorts</h2>
+                <p class="lead mb-0">Select a cohort to continue:</p>
+            </div>
+            {% if user.is_staff %}
+            <a href="{% url 'admin_views:import_mentor_csv' %}" class="btn btn-primary">
+                <i class="bi bi-upload"></i> Import Mentors
+            </a>
+            {% endif %}
+        </div>
         
         {% if cohorts %}
             <div class="row">
