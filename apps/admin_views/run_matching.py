@@ -7,11 +7,8 @@ from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from apps.core.models import Cohort
 from apps.matching.models import MatchRun
-from apps.matching.services import (
-    run_strict_matching,
-    run_exception_matching,
-    export_match_run_csv,
-)
+from apps.matching.service import run_matching
+from apps.matching.services import export_match_run_csv
 from apps.matching.export import export_match_run_xlsx
 
 logger = logging.getLogger(__name__)
@@ -31,49 +28,27 @@ def run_matching_view(request, cohort_id):
     if request.method == "POST":
         mode = request.POST.get("mode", "STRICT")
 
-        if mode == "STRICT":
-            # Run strict matching
-            match_run = run_strict_matching(cohort, request.user)
+        # Run matching using unified service
+        match_run = run_matching(cohort, request.user, mode)
 
-            if match_run.status == "SUCCESS":
-                messages.success(request, "Strict matching completed successfully!")
-                return redirect("admin_views:match_results", match_run_id=match_run.id)
-            else:
-                messages.error(
-                    request,
-                    f"Strict matching failed: {match_run.failure_report.get('message', 'Unknown error')}",
-                )
-                return render(
-                    request,
-                    "admin_views/run_matching.html",
-                    {
-                        "cohort": cohort,
-                        "match_run": match_run,
-                    },
-                )
-        elif mode == "EXCEPTION":
-            # Run exception matching
-            match_run = run_exception_matching(cohort, request.user)
-
-            if match_run.status == "SUCCESS":
-                messages.success(request, "Exception matching completed successfully!")
-                return redirect("admin_views:match_results", match_run_id=match_run.id)
-            else:
-                messages.error(
-                    request,
-                    f"Exception matching failed: {match_run.failure_report.get('message', 'Unknown error')}",
-                )
-                return render(
-                    request,
-                    "admin_views/run_matching.html",
-                    {
-                        "cohort": cohort,
-                        "match_run": match_run,
-                    },
-                )
+        if match_run.status == "SUCCESS":
+            messages.success(
+                request, f"{mode.title()} matching completed successfully!"
+            )
+            return redirect("admin_views:match_results", match_run_id=match_run.id)
         else:
-            messages.error(request, f"Unsupported mode: {mode}")
-            return redirect("admin_views:run_matching", cohort_id=cohort_id)
+            messages.error(
+                request,
+                f"{mode.title()} matching failed: {match_run.failure_report.get('message', 'Unknown error')}",
+            )
+            return render(
+                request,
+                "admin_views/run_matching.html",
+                {
+                    "cohort": cohort,
+                    "match_run": match_run,
+                },
+            )
 
     # GET request - show run matching page
     # Get recent match runs for this cohort
@@ -138,13 +113,16 @@ def export_match_run_view(request, match_run_id):
 
     # Determine export format
     export_format = request.GET.get("format", "csv")
-    
+
     if export_format == "xlsx":
         # Generate XLSX
         xlsx_content = export_match_run_xlsx(match_run)
 
         # Create response
-        response = HttpResponse(xlsx_content, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response = HttpResponse(
+            xlsx_content,
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
         response["Content-Disposition"] = (
             f'attachment; filename="match_results_{match_run.id}.xlsx"'
         )
