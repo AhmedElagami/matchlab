@@ -1,0 +1,30 @@
+# Dataset Manifest - Tester A
+
+- tester: A
+- datasets:
+  - Dataset A (primary): fixtures/cohort_5x5_ready.json (cohort id 2, 5 mentors + 5 mentees, all submitted)
+  - Dataset B (access-control): fixtures/cohort_3x3.json (cohort id 1, 3 mentors + 3 mentees, not submitted)
+  - Dataset C (sanity/not-ready): fixtures/cohort_5x5_not_ready.json (cohort id 3, 5 mentors + 5 mentees, 1 mentee not submitted)
+- seed commands:
+  - printf "yes\n" | ./scripts/reset_testing_env.sh
+  - docker compose -f docker-compose.dev.yml exec app python manage.py loaddata fixtures/cohort_3x3.json
+  - docker compose -f docker-compose.dev.yml exec app python manage.py loaddata fixtures/cohort_5x5_ready.json
+  - docker compose -f docker-compose.dev.yml exec app python manage.py loaddata fixtures/cohort_5x5_not_ready.json
+  - docker compose -f docker-compose.dev.yml exec app python manage.py shell -c "from django.contrib.auth.models import User; \nif not User.objects.filter(username='admin').exists():\n    User.objects.create_superuser('admin', 'admin@example.com', 'admin123')\n\nfor username in ['mentor1','mentee1']:\n    u=User.objects.get(username=username); u.set_password('test123'); u.save()"
+- fixture files:
+  - fixtures/cohort_3x3.json
+  - fixtures/cohort_5x5_ready.json
+  - fixtures/cohort_5x5_not_ready.json
+- entity counts (post-seed):
+  - users: 26
+  - cohorts: 3
+  - participants: 26
+  - preferences: 12
+- cohort summary:
+  - cohort 1 (Test Cohort 3x3): participants 6, submitted 0
+  - cohort 2 (Test Cohort 5x5 Ready): participants 10, submitted 10
+  - cohort 3 (Test Cohort 5x5 Not Ready): participants 10, submitted 9
+- assumptions/preconditions:
+  - admin user re-created after fixture load (fixtures overwrite auth_user pk=1)
+  - mentor1/mentee1 passwords set to test123 via post-seed step
+  - docker compose services running from docker-compose.dev.yml

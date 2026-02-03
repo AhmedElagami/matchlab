@@ -1,0 +1,2 @@
+playwright_browser_console_messages(level=info) returned no entries.
+Note: Playwright event stream during navigation reported a favicon 404 and TypeError errors on /match-run/1/results/; see test report.

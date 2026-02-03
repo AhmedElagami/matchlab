@@ -1,0 +1,4 @@
+ id |   mode    | status |                               failure_report                                
+----+-----------+--------+-----------------------------------------------------------------------------
+ 14 | EXCEPTION | FAILED | {"reason": "NO_PARTICIPANTS", "message": "No submitted participants found"}
+(1 row)

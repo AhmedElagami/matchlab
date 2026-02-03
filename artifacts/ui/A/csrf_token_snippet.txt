@@ -1,0 +1,3 @@
+CSRF token evidence from /cohort/2/run-matching/ (view-source blocked by Playwright protocol restrictions).
+csrfTokenPresent: true
+csrfTokenHtml: <input type="hidden" name="csrfmiddlewaretoken" value="icnxN3lAk63Ds7EuaNsf2WQuluefMOn5gnunr5i7uihJ8OUOaE8dFgjkLQH6mpwC">

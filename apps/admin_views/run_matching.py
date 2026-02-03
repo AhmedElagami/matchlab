@@ -37,9 +37,15 @@ def run_matching_view(request, cohort_id):
             )
             return redirect("admin_views:match_results", match_run_id=match_run.id)
         else:
+            failure_report = match_run.failure_report or {}
+            failure_reason = (
+                failure_report.get("message")
+                or failure_report.get("reason")
+                or "Unknown error"
+            )
             messages.error(
                 request,
-                f"{mode.title()} matching failed: {match_run.failure_report.get('message', 'Unknown error')}",
+                f"{mode.title()} matching failed: {failure_reason}",
             )
             return render(
                 request,

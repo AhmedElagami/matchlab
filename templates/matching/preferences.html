@@ -61,6 +61,20 @@
                             {{ form.non_field_errors }}
                         </div>
                     {% endif %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger" data-testid="preferences-form-errors">
+                            <p class="mb-1">Please fix the errors below.</p>
+                            <ul class="mb-0">
+                                {% for field, errors in form.errors.items %}
+                                    {% if field != '__all__' %}
+                                        {% for error in errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                     
                     <div class="table-responsive">
                         <table class="table table-hover">

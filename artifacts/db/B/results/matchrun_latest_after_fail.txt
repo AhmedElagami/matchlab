@@ -1,0 +1,4 @@
+ id |   mode    | status |                                                      failure_report                                                       
+----+-----------+--------+---------------------------------------------------------------------------------------------------------------------------
+  4 | EXCEPTION | FAILED | {"reason": "COUNT_MISMATCH", "message": "Unequal counts: 5 mentors vs 4 mentees", "mentees_count": 4, "mentors_count": 5}
+(1 row)

@@ -1,0 +1,30 @@
+Command: printf "yes\n" | ./scripts/reset_testing_env.sh
+Output:
+=== MatchLab Testing Environment Reset ===
+WARNING: This will DELETE ALL DATA and reset to a clean state!
+
+1. Stopping Docker services...
+✅ Docker services stopped and volumes removed
+
+2. Starting fresh Docker services...
+✅ Docker services started
+
+3. Waiting for database to be ready...
+
+4. Running migrations...
+✅ Database migrations applied
+
+5. Creating admin user...
+Admin user created: admin / admin123
+✅ Admin user ready
+
+6. Verifying clean state...
+=== Clean State Verification ===
+Users: 1 (should be 1 for admin)
+Cohorts: 0 (should be 0)
+Participants: 0 (should be 0)
+MatchRuns: 0 (should be 0)
+Matches: 0 (should be 0)
+
+=== Environment Reset Complete ===
+✅ Clean testing environment ready

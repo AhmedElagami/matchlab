@@ -1,0 +1,6 @@
+Command: docker compose -f docker-compose.dev.yml exec db psql -U matchlab -d matchlab -c "SELECT p.id, c.name AS cohort, u.username, p.role_in_cohort, p.display_name, p.organization FROM core_participant p JOIN core_cohort c ON c.id=p.cohort_id JOIN auth_user u ON u.id=p.user_id WHERE p.display_name='Mentor Eleven QA';"
+Output:
+ id |    cohort     | username | role_in_cohort |   display_name   | organization 
+----+---------------+----------+----------------+------------------+--------------
+ 31 | Test Cohort A | mentor11 | MENTOR         | Mentor Eleven QA | OrgZ
+(1 row)

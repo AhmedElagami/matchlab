@@ -18,6 +18,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from apps.core import views as core_views
+from apps.core.forms import LoginForm
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,12 +27,14 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(
         "auth/login/",
-        auth_views.LoginView.as_view(template_name="auth/login.html"),
+        auth_views.LoginView.as_view(
+            template_name="auth/login.html", authentication_form=LoginForm
+        ),
         name="login",
     ),
     path(
         "auth/logout/",
-        auth_views.LogoutView.as_view(next_page="/auth/login/"),
+        core_views.logout_view,
         name="logout",
     ),
     path("", include("apps.core.urls")),

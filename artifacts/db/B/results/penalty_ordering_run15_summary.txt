@@ -1,0 +1,10 @@
+id |   mode    | status  |                                                                                                          objective_summary                                                                                                          | failure_report 
+----+-----------+---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------
+ 15 | EXCEPTION | SUCCESS | {"avg_score": 10.0, "solve_time": 0.003014087677001953, "match_count": 2, "total_score": 20.0, "total_duration": 0.03142547607421875, "ambiguity_count": 2, "exception_count": 0, "exception_summary": {"E1": 0, "E2": 0, "E3": 0}} | {}
+(1 row)
+
+ id | mentor_id |      mentor      | mentor_org | mentee_id |      mentee      | mentee_org | score_percent | exception_type 
+----+-----------+------------------+------------+-----------+------------------+------------+---------------+----------------
+ 41 |        31 | Penalty Mentor 1 | OrgSame    |        34 | Penalty Mentee 2 | OrgC       |            10 | 
+ 42 |        32 | Penalty Mentor 2 | OrgB       |        33 | Penalty Mentee 1 | OrgSame    |            10 | 
+(2 rows)

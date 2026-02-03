@@ -1,0 +1,2 @@
+strict_time_limit=5
+exception_time_limit=10

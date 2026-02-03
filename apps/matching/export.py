@@ -27,6 +27,7 @@ def export_match_run_xlsx(match_run):
 
     # Define headers
     headers = [
+        "Cohort",
         "Mentor Name",
         "Mentor Email",
         "Mentor Organization",
@@ -45,8 +46,10 @@ def export_match_run_xlsx(match_run):
 
     # Write headers with styling
     header_font = Font(bold=True)
-    header_fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
-    
+    header_fill = PatternFill(
+        start_color="CCCCCC", end_color="CCCCCC", fill_type="solid"
+    )
+
     for col_num, header in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col_num, value=header)
         cell.font = header_font
@@ -55,20 +58,21 @@ def export_match_run_xlsx(match_run):
 
     # Write data rows
     for row_num, result in enumerate(results, 2):
-        ws.cell(row=row_num, column=1, value=result["mentor_name"])
-        ws.cell(row=row_num, column=2, value=result["mentor_email"])
-        ws.cell(row=row_num, column=3, value=result["mentor_org"])
-        ws.cell(row=row_num, column=4, value=result["mentee_name"])
-        ws.cell(row=row_num, column=5, value=result["mentee_email"])
-        ws.cell(row=row_num, column=6, value=result["mentee_org"])
-        ws.cell(row=row_num, column=7, value=result["match_percent"])
-        ws.cell(row=row_num, column=8, value=result["ambiguity_flag"])
-        ws.cell(row=row_num, column=9, value=result["ambiguity_reason"])
-        ws.cell(row=row_num, column=10, value=result["exception_flag"])
-        ws.cell(row=row_num, column=11, value=result["exception_type"])
-        ws.cell(row=row_num, column=12, value=result["exception_reason"])
-        ws.cell(row=row_num, column=13, value=result["is_manual_override"])
-        ws.cell(row=row_num, column=14, value=result["override_reason"])
+        ws.cell(row=row_num, column=1, value=result["cohort"])
+        ws.cell(row=row_num, column=2, value=result["mentor_name"])
+        ws.cell(row=row_num, column=3, value=result["mentor_email"])
+        ws.cell(row=row_num, column=4, value=result["mentor_org"])
+        ws.cell(row=row_num, column=5, value=result["mentee_name"])
+        ws.cell(row=row_num, column=6, value=result["mentee_email"])
+        ws.cell(row=row_num, column=7, value=result["mentee_org"])
+        ws.cell(row=row_num, column=8, value=result["match_percent"])
+        ws.cell(row=row_num, column=9, value=result["ambiguity_flag"])
+        ws.cell(row=row_num, column=10, value=result["ambiguity_reason"])
+        ws.cell(row=row_num, column=11, value=result["exception_flag"])
+        ws.cell(row=row_num, column=12, value=result["exception_type"])
+        ws.cell(row=row_num, column=13, value=result["exception_reason"])
+        ws.cell(row=row_num, column=14, value=result["is_manual_override"])
+        ws.cell(row=row_num, column=15, value=result["override_reason"])
 
     # Auto-adjust column widths
     for column in ws.columns:
@@ -88,14 +92,20 @@ def export_match_run_xlsx(match_run):
 
     # Add metadata
     metadata_row = len(results) + 3
-    ws.cell(row=metadata_row, column=1, value=f"Exported: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    ws.cell(
+        row=metadata_row,
+        column=1,
+        value=f"Exported: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+    )
     ws.cell(row=metadata_row + 1, column=1, value=f"Match Run ID: {match_run.id}")
     ws.cell(row=metadata_row + 2, column=1, value=f"Cohort: {match_run.cohort.name}")
-    ws.cell(row=metadata_row + 3, column=1, value=f"Mode: {match_run.get_mode_display()}")
+    ws.cell(
+        row=metadata_row + 3, column=1, value=f"Mode: {match_run.get_mode_display()}"
+    )
 
     # Save to bytes
     output = io.BytesIO()
     wb.save(output)
     output.seek(0)
-    
+
     return output.getvalue()

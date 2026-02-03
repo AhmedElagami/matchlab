@@ -1,0 +1,22 @@
+Command: ./scripts/verify_tester_a_env.sh
+Output:
+=== MatchLab Tester A Environment Verification ===
+1. Checking Docker containers...
+matchlab-app-1   matchlab-app   "python manage.py ru…"   app       5 minutes ago   Up 5 minutes   0.0.0.0:8000->8000/tcp
+matchlab-db-1    postgres:16    "docker-entrypoint.s…"   db        5 minutes ago   Up 5 minutes   0.0.0.0:5434->5432/tcp
+✅ Docker containers are running
+
+2. Checking application availability...
+✅ Application is accessible
+
+3. Checking admin user...
+✅ Admin user exists
+
+4. Checking test users...
+✅ Test users exist
+
+5. Checking cohort data...
+✅ Cohort data loaded
+
+=== Environment Verification Complete ===
+✅ All systems ready for Tester A

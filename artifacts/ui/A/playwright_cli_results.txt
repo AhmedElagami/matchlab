@@ -1,0 +1,3 @@
+Command: pytest playwright_tests/
+Output:
+/bin/bash: line 1: pytest: command not found

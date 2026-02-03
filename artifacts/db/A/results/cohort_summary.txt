@@ -1,0 +1,8 @@
+Command: docker compose -f docker-compose.dev.yml exec db psql -U matchlab -d matchlab -c "SELECT c.id, c.name, c.status, COUNT(p.id) AS participants, SUM(CASE WHEN p.is_submitted THEN 1 ELSE 0 END) AS submitted FROM core_cohort c LEFT JOIN core_participant p ON p.cohort_id = c.id GROUP BY c.id ORDER BY c.id;"
+Output:
+ id |           name            | status | participants | submitted 
+----+---------------------------+--------+--------------+-----------
+  1 | Test Cohort 3x3           | OPEN   |            6 |         0
+  2 | Test Cohort 5x5 Ready     | OPEN   |           10 |        10
+  3 | Test Cohort 5x5 Not Ready | OPEN   |           10 |         9
+(3 rows)

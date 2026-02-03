@@ -134,7 +134,9 @@ def run_strict_matching(cohort: Cohort, user) -> MatchRun:
             }
             match_run.save()
 
-            logger.info(f"Strict matching completed for cohort {cohort.id} in {total_duration:.2f}s with {len(matches_data)} matches")
+            logger.info(
+                f"Strict matching completed for cohort {cohort.id} in {total_duration:.2f}s with {len(matches_data)} matches"
+            )
 
             # Create match records
             for match_data in matches_data:
@@ -276,7 +278,9 @@ def run_exception_matching(cohort: Cohort, user) -> MatchRun:
             }
             match_run.save()
 
-            logger.info(f"Exception matching completed for cohort {cohort.id} in {total_duration:.2f}s with {len(matches_data)} matches and {exception_count} exceptions")
+            logger.info(
+                f"Exception matching completed for cohort {cohort.id} in {total_duration:.2f}s with {len(matches_data)} matches and {exception_count} exceptions"
+            )
 
             # Create match records
             for match_data in matches_data:
@@ -352,6 +356,7 @@ def get_match_run_results(match_run: MatchRun) -> List[Dict[str, Any]]:
     for match in matches:
         results.append(
             {
+                "cohort": match_run.cohort.name,
                 "mentor_name": match.mentor.display_name,
                 "mentor_email": match.mentor.user.email,
                 "mentor_org": match.mentor.organization,
@@ -391,6 +396,7 @@ def export_match_run_csv(match_run: MatchRun) -> str:
     # Header
     writer.writerow(
         [
+            "cohort",
             "mentor_name",
             "mentor_email",
             "mentor_org",
@@ -412,6 +418,7 @@ def export_match_run_csv(match_run: MatchRun) -> str:
     for result in results:
         writer.writerow(
             [
+                result["cohort"],
                 result["mentor_name"],
                 result["mentor_email"],
                 result["mentor_org"],

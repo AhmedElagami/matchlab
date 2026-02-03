@@ -1,0 +1,83 @@
+# Service Status and Wipe Evidence (Tester B)
+
+## Step 1: Full data wipe + migrations
+Command:
+`docker compose -f docker-compose.dev.yml down -v && docker compose -f docker-compose.dev.yml up -d && docker compose -f docker-compose.dev.yml exec app python manage.py migrate`
+
+Output:
+```
+time="2026-02-03T13:56:26Z" level=warning msg="/home/ubuntu/matchlab/docker-compose.dev.yml: `version` is obsolete"
+ Container matchlab-app-1  Stopping
+ Container matchlab-app-1  Stopped
+ Container matchlab-app-1  Removing
+ Container matchlab-app-1  Removed
+ Container matchlab-db-1  Stopping
+ Container matchlab-db-1  Stopped
+ Container matchlab-db-1  Removing
+ Container matchlab-db-1  Removed
+ Volume matchlab_postgres_data  Removing
+ Network matchlab_default  Removing
+ Volume matchlab_postgres_data  Removed
+ Network matchlab_default  Removed
+time="2026-02-03T13:56:27Z" level=warning msg="/home/ubuntu/matchlab/docker-compose.dev.yml: `version` is obsolete"
+ Network matchlab_default  Creating
+ Network matchlab_default  Created
+ Volume "matchlab_postgres_data"  Creating
+ Volume "matchlab_postgres_data"  Created
+time="2026-02-03T13:56:27Z" level=warning msg="Found orphan containers ([matchlab-test-1 matchlab-test-run-3ec27992864a matchlab-test-run-e6a67b2ef8e7 matchlab-test-run-1b5b868ff537 matchlab-test-run-360084cba546]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container matchlab-db-1  Creating
+ Container matchlab-db-1  Created
+ Container matchlab-app-1  Creating
+ Container matchlab-app-1  Created
+ Container matchlab-db-1  Starting
+ Container matchlab-db-1  Started
+ Container matchlab-app-1  Starting
+ Container matchlab-app-1  Started
+time="2026-02-03T13:56:28Z" level=warning msg="/home/ubuntu/matchlab/docker-compose.dev.yml: `version` is obsolete"
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, core, matching, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying core.0001_initial... OK
+  Applying core.0002_cohort_cohort_config... OK
+  Applying matching.0001_initial... OK
+  Applying matching.0002_importjob_menteeprofile_mentorprofile... OK
+  Applying matching.0003_pairscore... OK
+  Applying matching.0004_add_match_models... OK
+  Applying sessions.0001_initial... OK
+```
+
+## Step 1B: Service status + health check
+Command:
+`docker compose -f docker-compose.dev.yml ps`
+
+Output:
+```
+NAME             IMAGE          COMMAND                  SERVICE   CREATED          STATUS          PORTS
+matchlab-app-1   matchlab-app   "python manage.py ru…"   app       35 seconds ago   Up 35 seconds   0.0.0.0:8000->8000/tcp
+matchlab-db-1    postgres:16    "docker-entrypoint.s…"   db        35 seconds ago   Up 35 seconds   0.0.0.0:5434->5432/tcp
+```
+
+Command:
+`curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/auth/login/`
+
+Output:
+```
+200
+```

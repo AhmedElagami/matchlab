@@ -1,0 +1,10 @@
+Command: docker compose -f docker-compose.dev.yml exec db psql -U matchlab -d matchlab -c "SELECT id, match_run_id, mentor_id, mentee_id, score_percent, ambiguity_flag, exception_flag, exception_type, exception_reason, is_manual_override, override_reason FROM matching_match WHERE match_run_id=2 ORDER BY id;"
+Output:
+ id | match_run_id | mentor_id | mentee_id | score_percent | ambiguity_flag | exception_flag | exception_type |           exception_reason           | is_manual_override | override_reason 
+----+--------------+-----------+-----------+---------------+----------------+----------------+----------------+--------------------------------------+--------------------+-----------------
+  1 |            2 |        11 |        17 |             0 | t              | t              | E1             | Mentor did not rank mentee           | f                  | 
+  2 |            2 |        12 |        20 |             0 | t              | t              | E2             | Neither participant ranked the other | f                  | 
+  3 |            2 |        13 |        19 |             0 | t              | t              | E2             | Neither participant ranked the other | f                  | 
+  4 |            2 |        14 |        16 |             0 | t              | t              | E1             | Mentee did not rank mentor           | f                  | 
+  5 |            2 |        15 |        18 |             0 | t              | t              | E2             | Neither participant ranked the other | f                  | 
+(5 rows)

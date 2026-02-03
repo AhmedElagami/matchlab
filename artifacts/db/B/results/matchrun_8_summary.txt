@@ -1,0 +1,19 @@
+ id |   mode    | status  |                                                                                                          objective_summary                                                                                                          
+----+-----------+---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  8 | EXCEPTION | SUCCESS | {"avg_score": 12.0, "solve_time": 0.005203723907470703, "match_count": 5, "total_score": 60.0, "total_duration": 0.07280302047729492, "ambiguity_count": 4, "exception_count": 4, "exception_summary": {"E1": 4, "E2": 0, "E3": 0}}
+(1 row)
+
+ exception_type | count 
+----------------+-------
+                |     1
+ E1             |     4
+(2 rows)
+
+ mentor_id | mentee_id | exception_type |      exception_reason      
+-----------+-----------+----------------+----------------------------
+        21 |        26 |                | No exception
+        22 |        27 | E1             | Mentor did not rank mentee
+        23 |        28 | E1             | Mentor did not rank mentee
+        24 |        29 | E1             | Mentor did not rank mentee
+        25 |        30 | E1             | Mentor did not rank mentee
+(5 rows)

@@ -1,0 +1,19 @@
+cohorts 
+--------
+      2
+(1 row)
+
+participants 
+-------------
+          20
+(1 row)
+
+preferences 
+------------
+         52
+(1 row)
+
+users 
+------
+   21
+(1 row)

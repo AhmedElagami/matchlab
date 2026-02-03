@@ -1,8 +1,11 @@
 """Pytest configuration for Playwright tests."""
 
+import os
 import pytest
 from django.contrib.auth.models import User
 from apps.core.models import Cohort, Participant
+
+os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 
 @pytest.fixture(scope="session")
@@ -14,13 +17,22 @@ def django_db_setup():
 @pytest.fixture
 def admin_user(db):
     """Create admin user for tests."""
-    user = User.objects.create_user(
+    user, created = User.objects.get_or_create(
         username="admin",
-        email="admin@test.com",
-        password="testpass123",
-        is_staff=True,
-        is_superuser=True,
+        defaults={
+            "email": "admin@test.com",
+            "is_staff": True,
+            "is_superuser": True,
+        },
     )
+    if created:
+        user.set_password("testpass123")
+    else:
+        user.email = "admin@test.com"
+        user.is_staff = True
+        user.is_superuser = True
+        user.set_password("testpass123")
+    user.save()
     return user
 
 

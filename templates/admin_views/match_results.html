@@ -122,7 +122,7 @@
                         </div>
                     </div>
                     <div class="mb-2">
-                        <p class="mb-0"><strong id="matchCount">{{ matches|length }}</strong> matches displayed</p>
+                        <p class="mb-0" data-testid="match-count"><strong id="matchCount">{{ matches|length }}</strong> matches displayed</p>
                     </div>
                 </div>
                 <div class="row mb-3" id="searchContainer" style="display: none;">
@@ -204,7 +204,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchContainer = document.getElementById('searchContainer');
     const searchInput = document.getElementById('searchInput');
     const matchCountElement = document.getElementById('matchCount');
-    const tableRows = document.querySelectorAll('#resultsTable tbody tr');
+    const tableBody = document.querySelector('#resultsTable tbody');
+
+    if (!filterAmbiguousCheckbox || !filterExceptionsCheckbox || !searchToggle || !searchContainer || !searchInput || !matchCountElement || !tableBody) {
+        return;
+    }
+
+    const tableRows = tableBody.querySelectorAll('tr');
     
     // Show/hide search input
     searchToggle.addEventListener('change', function() {

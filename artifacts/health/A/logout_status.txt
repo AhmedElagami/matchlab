@@ -1,0 +1,3 @@
+Command: curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/auth/logout/
+Output:
+405

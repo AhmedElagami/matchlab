@@ -1,0 +1,9 @@
+Command: docker compose -f docker-compose.dev.yml exec db psql -U matchlab -d matchlab -c "SELECT 'users' AS table, COUNT(*) FROM auth_user UNION ALL SELECT 'cohorts', COUNT(*) FROM core_cohort UNION ALL SELECT 'participants', COUNT(*) FROM core_participant UNION ALL SELECT 'preferences', COUNT(*) FROM matching_preference;"
+Output:
+    table     | count 
+--------------+-------
+ users        |    26
+ cohorts      |     3
+ participants |    26
+ preferences  |    12
+(4 rows)

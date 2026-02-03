@@ -1,0 +1,6 @@
+Command: docker compose -f docker-compose.dev.yml exec db psql -U matchlab -d matchlab -c "SELECT match_run_id, COUNT(*) AS match_count FROM matching_match GROUP BY match_run_id ORDER BY match_run_id;"
+Output:
+ match_run_id | match_count 
+--------------+-------------
+            2 |           5
+(1 row)

@@ -1,0 +1,6 @@
+Command: docker compose -f docker-compose.dev.yml exec db psql -U matchlab -d matchlab -c "SELECT id, name, status FROM core_cohort WHERE name='Test Cohort A';"
+Output:
+ id |     name      | status 
+----+---------------+--------
+  4 | Test Cohort A | CLOSED
+(1 row)

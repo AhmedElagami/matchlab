@@ -1,7 +1,7 @@
 [
   {
     "model": "core.cohort",
-    "pk": 1,
+    "pk": 101,
     "fields": {
       "name": "Test Cohort 3x3",
       "status": "OPEN",
@@ -16,7 +16,7 @@
       "first_name": "Mentor",
       "last_name": "One",
       "email": "mentor1@example.com",
-      "password": "pbkdf2_sha256$600000$test$test==",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
       "is_active": true,
       "is_superuser": false,
@@ -25,13 +25,13 @@
   },
   {
     "model": "auth.user",
-    "pk": 2,
+    "pk": 102,
     "fields": {
       "username": "mentor2",
       "first_name": "Mentor",
       "last_name": "Two",
       "email": "mentor2@example.com",
-      "password": "pbkdf2_sha256$600000$test$test==",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
       "is_active": true,
       "is_superuser": false,
@@ -40,13 +40,13 @@
   },
   {
     "model": "auth.user",
-    "pk": 3,
+    "pk": 103,
     "fields": {
       "username": "mentor3",
       "first_name": "Mentor",
       "last_name": "Three",
       "email": "mentor3@example.com",
-      "password": "pbkdf2_sha256$600000$test$test==",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
       "is_active": true,
       "is_superuser": false,
@@ -55,13 +55,13 @@
   },
   {
     "model": "auth.user",
-    "pk": 4,
+    "pk": 104,
     "fields": {
       "username": "mentee1",
       "first_name": "Mentee",
       "last_name": "One",
       "email": "mentee1@example.com",
-      "password": "pbkdf2_sha256$600000$test$test==",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
       "is_active": true,
       "is_superuser": false,
@@ -70,13 +70,13 @@
   },
   {
     "model": "auth.user",
-    "pk": 5,
+    "pk": 105,
     "fields": {
       "username": "mentee2",
       "first_name": "Mentee",
       "last_name": "Two",
       "email": "mentee2@example.com",
-      "password": "pbkdf2_sha256$600000$test$test==",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
       "is_active": true,
       "is_superuser": false,
@@ -85,13 +85,13 @@
   },
   {
     "model": "auth.user",
-    "pk": 6,
+    "pk": 106,
     "fields": {
       "username": "mentee3",
       "first_name": "Mentee",
       "last_name": "Three",
       "email": "mentee3@example.com",
-      "password": "pbkdf2_sha256$600000$test$test==",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
       "is_active": true,
       "is_superuser": false,
@@ -103,7 +103,7 @@
     "pk": 1,
     "fields": {
       "cohort": 1,
-      "user": 1,
+      "user": 101,
       "role_in_cohort": "MENTOR",
       "display_name": "Mentor One",
       "organization": "OrgA",
@@ -117,7 +117,7 @@
     "pk": 2,
     "fields": {
       "cohort": 1,
-      "user": 2,
+      "user": 102,
       "role_in_cohort": "MENTOR",
       "display_name": "Mentor Two",
       "organization": "OrgB",
@@ -131,7 +131,7 @@
     "pk": 3,
     "fields": {
       "cohort": 1,
-      "user": 3,
+      "user": 103,
       "role_in_cohort": "MENTOR",
       "display_name": "Mentor Three",
       "organization": "OrgC",
@@ -145,7 +145,7 @@
     "pk": 4,
     "fields": {
       "cohort": 1,
-      "user": 4,
+      "user": 104,
       "role_in_cohort": "MENTEE",
       "display_name": "Mentee One",
       "organization": "OrgB",
@@ -159,7 +159,7 @@
     "pk": 5,
     "fields": {
       "cohort": 1,
-      "user": 5,
+      "user": 105,
       "role_in_cohort": "MENTEE",
       "display_name": "Mentee Two",
       "organization": "OrgC",
@@ -173,7 +173,7 @@
     "pk": 6,
     "fields": {
       "cohort": 1,
-      "user": 6,
+      "user": 106,
       "role_in_cohort": "MENTEE",
       "display_name": "Mentee Three",
       "organization": "OrgA",
