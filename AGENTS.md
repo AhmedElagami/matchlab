@@ -17,7 +17,7 @@ This file defines **process and behavior**, not business logic.
 
 The following documents are authoritative:
 
-1. **TECHNICAL_SPEC.md**
+1. **docs/TECHNICAL_SPEC.md**
 
    * System requirements
    * Data model
@@ -30,7 +30,7 @@ The following documents are authoritative:
    * How agents must work
 
 If there is any conflict:
-**TECHNICAL_SPEC.md > AGENTS.md > Agent assumptions**
+**docs/TECHNICAL_SPEC.md > AGENTS.md > Agent assumptions**
 
 Agents must not invent requirements.
 

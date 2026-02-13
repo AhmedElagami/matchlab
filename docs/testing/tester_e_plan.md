@@ -25,7 +25,7 @@ Validation must include:
 
 ## Pass criteria
 - No console errors or failed network calls during runs/results for large datasets
-- Matching results adhere to constraints in TECHNICAL_SPEC.md
+- Matching results adhere to constraints in ../TECHNICAL_SPEC.md
 - DB rows match expected counts and integrity invariants
 - Determinism: repeated runs on identical seed produce identical results (where required)
 - Partial submissions: only eligible participants included
