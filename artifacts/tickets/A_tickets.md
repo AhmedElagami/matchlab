@@ -53,7 +53,7 @@
   1. Login as admin
   2. Open /match-run/2/results/
   3. Export CSV
-- Observed: CSV headers omit required "cohort" column specified in TECHNICAL_SPEC.md.
+- Observed: CSV headers omit required "cohort" column specified in docs/design/TECHNICAL_SPEC.md.
 - Expected: CSV should include cohort column alongside mentor/mentee fields.
 - Evidence: artifacts/ui/A/match_results_2.csv, docs/design/TECHNICAL_SPEC.md
 
