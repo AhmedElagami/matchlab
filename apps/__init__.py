@@ -1,0 +1,1 @@
+"""Django app namespace package."""

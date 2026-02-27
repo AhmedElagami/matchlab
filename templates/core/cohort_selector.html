@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">My Cohorts</h2>
+                <p class="lead mb-0">Select a cohort to continue:</p>
+            </div>
+        </div>
+        
+        {% if cohorts %}
+            <div class="row">
+                {% for cohort in cohorts %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ cohort.name }}</h5>
+                            <p class="card-text">
+                                <span class="badge bg-secondary">{{ cohort.status }}</span>
+                            </p>
+                            <a href="{% url 'core:profile' cohort.id %}" class="btn btn-primary" data-testid="cohort-select-{{ cohort.id }}">Select</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You are not enrolled in any cohorts yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load matching_extras %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">Preferences - {{ cohort.name }}</h2>
+                <p class="lead mb-0">Your submitted preferences (read-only)</p>
+            </div>
+            <a href="{% url 'core:profile' cohort_id=cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+        
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Your preferences have been submitted and are now locked.
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Submitted Preferences</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Organization</th>
+                                <th>Your Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for candidate in candidates %}
+                            <tr>
+                                <td>{{ candidate.display_name }}</td>
+                                <td>{{ candidate.organization }}</td>
+                                <td>
+                                    {% if candidate.id in preference_dict %}
+                                        <span class="badge bg-primary">{{ preference_dict|get_item:candidate.id }}</span>
+                                    {% else %}
+                                        <span class="text-muted">Not ranked</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

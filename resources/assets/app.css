@@ -1,0 +1,96 @@
+/* Custom CSS for Mentor-Mentee Matchmaker */
+
+/* Sticky table header */
+.table-responsive {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.table thead.sticky-top th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 10;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge contrast improvements */
+.badge.bg-warning.text-dark {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge.bg-info {
+    background-color: #0dcaf0 !important;
+}
+
+/* Card enhancements */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/* Form controls */
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Button enhancements */
+.btn:focus:not(:focus-visible) {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Alert improvements */
+.alert {
+    border: 1px solid transparent;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+/* Table row hover effects */
+.table-hover > tbody > tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Text muted for small details */
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table-responsive {
+        max-height: 400px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}

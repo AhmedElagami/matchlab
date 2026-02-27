@@ -1,0 +1,27 @@
+[build]
+  command = "python manage.py collectstatic --noinput"
+  publish = "resources/staticfiles"
+  functions = "netlify/functions"
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
+
+# Required environment variables (set in Netlify UI)
+# - DJANGO_SECRET_KEY: Secret key for Django
+# - DJANGO_DEBUG: Set to "False" for production
+# - DJANGO_ALLOWED_HOSTS: Comma-separated list of allowed hosts (include your Netlify domain)
+# - POSTGRES_DB: PostgreSQL database name
+# - POSTGRES_USER: PostgreSQL username
+# - POSTGRES_PASSWORD: PostgreSQL password
+# - POSTGRES_HOST: PostgreSQL host (external database)
+# - POSTGRES_PORT: PostgreSQL port (default 5432)
+
+[functions]
+  # Django WSGI handler function
+  django = { handler = "wsgi.handler" }
+
+# Plugin configuration for Django-specific optimizations
+[[plugins]]
+  package = "netlify-plugin-django"
+  [plugins.inputs]
+    python_version = "3.11"

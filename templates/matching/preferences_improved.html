@@ -1,0 +1,384 @@
+{% extends 'base.html' %}
+{% load matching_extras %}
+
+{% block content %}
+<style>
+.dragging {
+    opacity: 0.5;
+    background-color: #f8f9fa;
+}
+
+.candidate-row:hover {
+    background-color: #f8f9fa;
+}
+
+.candidate-row.dragging {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.profile-card {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.tag-badge {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">Preferences - {{ cohort.name }}</h2>
+                <p class="lead mb-0">Rank your preferred {{ participant.get_role_in_cohort_display|lower }} matches</p>
+            </div>
+            <a href="{% url 'core:profile' cohort_id=cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+        
+        {% if participant.is_submitted %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Your preferences have been submitted and are now locked.
+            </div>
+        {% endif %}
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Rank Candidates</h5>
+                    <div>
+                        <a href="?show_blocked=true" 
+                           class="btn btn-sm btn-outline-secondary {% if show_blocked %}active{% endif %}" 
+                           data-testid="show-blocked-toggle">
+                            Show Blocked
+                        </a>
+                    </div>
+                </div>
+                <small class="text-muted">
+                    Drag and drop candidates to reorder them by preference (top = highest preference).
+                    Candidates at the bottom will not be matched.
+                </small>
+            </div>
+            <div class="card-body">
+                <form method="post" id="preferences-form">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger" data-testid="preferences-form-errors">
+                            <p class="mb-1">Please fix the errors below.</p>
+                            <ul class="mb-0">
+                                {% for field, errors in form.errors.items %}
+                                    {% if field != '__all__' %}
+                                        {% for error in errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Drag to Reorder</th>
+                                    <th>Candidate</th>
+                                    <th>Profile Details</th>
+                                    <th>Organization</th>
+                                    <th>Preference Order</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sortable-candidates">
+                                {% for candidate in candidates %}
+                                <tr class="candidate-row" data-candidate-id="{{ candidate.id }}">
+                                    <td style="width: 40px; cursor: move;">
+                                        <i class="bi bi-grip-vertical text-muted"></i>
+                                    </td>
+                                    <td>
+                                        <strong>{{ candidate.display_name }}</strong>
+                                        {% if candidate.role_in_cohort == "MENTOR" %}
+                                            <br><small class="text-muted">Mentor</small>
+                                        {% else %}
+                                            <br><small class="text-muted">Mentee</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if candidate.role_in_cohort == "MENTOR" %}
+                                            {% if candidate.mentor_profile %}
+                                            <div class="profile-card">
+                                                <div><strong>{{ candidate.mentor_profile.job_title }}</strong></div>
+                                                <div class="text-muted">{{ candidate.mentor_profile.function }}</div>
+                                                {% if candidate.mentor_profile.get_expertise_tags_list %}
+                                                <div class="mt-1">
+                                                    <small><strong>Expertise:</strong></small>
+                                                    {% for tag in candidate.mentor_profile.get_expertise_tags_list %}
+                                                        <span class="tag-badge">{{ tag }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                {% if candidate.mentor_profile.location %}
+                                                <div><small><i class="bi bi-geo-alt"></i> {{ candidate.mentor_profile.location }}</small></div>
+                                                {% endif %}
+                                                {% if candidate.mentor_profile.years_experience %}
+                                                <div><small><i class="bi bi-calendar"></i> {{ candidate.mentor_profile.years_experience }} years exp</small></div>
+                                                {% endif %}
+                                                {% if candidate.mentor_profile.get_languages_list %}
+                                                <div>
+                                                    <small><i class="bi bi-translate"></i> 
+                                                    {% for lang in candidate.mentor_profile.get_languages_list %}
+                                                        {{ lang }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                    </small>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if candidate.mentee_profile %}
+                                            <div class="profile-card">
+                                                {% if candidate.mentee_profile.desired_attributes.preferred_expertise %}
+                                                <div>
+                                                    <small><strong>Desired Expertise:</strong></small>
+                                                    {% for topic in candidate.mentee_profile.desired_attributes.preferred_expertise %}
+                                                        <span class="tag-badge">{{ topic }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                {% if candidate.mentee_profile.desired_attributes.preferred_location %}
+                                                <div><small><i class="bi bi-geo-alt"></i> {{ candidate.mentee_profile.desired_attributes.preferred_location }}</small></div>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ candidate.organization }}</td>
+                                    <td class="rank-display">
+                                        {% if form.initial|get_item:'candidate_'|get_item:candidate.id %}
+                                            #{{ form.initial|get_item:'candidate_'|get_item:candidate.id }}
+                                        {% else %}
+                                            Not ranked
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                                {% if blocked_candidates %}
+                                <tr class="table-warning">
+                                    <td colspan="5" class="fw-bold">Blocked Candidates (Same Organization)</td>
+                                </tr>
+                                {% for candidate in blocked_candidates %}
+                                <tr class="table-light">
+                                    <td><i class="bi bi-x-circle text-muted"></i></td>
+                                    <td>{{ candidate.display_name }}</td>
+                                    <td>
+                                        {% if candidate.role_in_cohort == "MENTOR" and candidate.mentor_profile %}
+                                            <div class="profile-card">
+                                                <div><strong>{{ candidate.mentor_profile.job_title }}</strong></div>
+                                                <div class="text-muted">{{ candidate.mentor_profile.function }}</div>
+                                            </div>
+                                        {% elif candidate.mentee_profile %}
+                                            <div class="profile-card">
+                                                <small>Desired expertise information</small>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ candidate.organization }}</td>
+                                    <td>
+                                        <small class="text-muted">Blocked (same organization)</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Hidden inputs to store the actual rank values -->
+                    {% for candidate in candidates %}
+                    <input type="hidden" 
+                           name="candidate_{{ candidate.id }}" 
+                           id="rank_{{ candidate.id }}"
+                           value="{{ form.initial|get_item:'candidate_'|get_item:candidate.id|default_if_none:'' }}">
+                    {% endfor %}
+                    
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="submit" class="btn btn-primary" data-testid="save-preferences-btn">
+                            <i class="bi bi-save"></i> Save Preferences
+                        </button>
+                        
+                        <button type="button" 
+                                class="btn btn-success" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#submitModal"
+                                data-testid="submit-preferences-btn"
+                                id="submit-btn"
+                                disabled>
+                            <i class="bi bi-check-circle"></i> Submit Preferences
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Submit Confirmation Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="submitModalLabel">Confirm Submission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to submit your preferences?</p>
+                <p class="text-danger"><strong>Important:</strong> Once submitted, you will not be able to edit your preferences.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'matching:submit_preferences' cohort_id=cohort.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" data-testid="confirm-submit-btn">
+                        Confirm Submission
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sortableTable = document.getElementById('sortable-candidates');
+    const saveBtn = document.querySelector('[data-testid="save-preferences-btn"]');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Track if preferences have been explicitly saved by the user
+    let preferencesExplicitlySaved = false;
+    
+    if (sortableTable) {
+        // Make rows draggable
+        const rows = sortableTable.querySelectorAll('.candidate-row');
+        
+        rows.forEach(row => {
+            // Make the row draggable
+            row.setAttribute('draggable', true);
+            
+            row.addEventListener('dragstart', function(e) {
+                e.dataTransfer.effectAllowed = 'move';
+                this.classList.add('dragging');
+                // Add some data to make Firefox happy
+                e.dataTransfer.setData('text/plain', '');
+            });
+            
+            row.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                updateRanks();
+            });
+        });
+        
+        // Add dragover event to the container
+        sortableTable.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            const draggingRow = document.querySelector('.candidate-row.dragging');
+            if (!draggingRow) return;
+            
+            const afterElement = getDragAfterElement(sortableTable, e.clientY);
+            if (afterElement === draggingRow) return;
+            
+            if (afterElement == null) {
+                sortableTable.appendChild(draggingRow);
+            } else {
+                sortableTable.insertBefore(draggingRow, afterElement);
+            }
+        });
+        
+        // Add dragenter event for visual feedback
+        sortableTable.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+        });
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.candidate-row:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        // Update rank display and hidden inputs when order changes
+        function updateRanks() {
+            const rows = sortableTable.querySelectorAll('.candidate-row');
+            rows.forEach((row, index) => {
+                const candidateId = row.getAttribute('data-candidate-id');
+                const rankDisplay = row.querySelector('.rank-display');
+                const hiddenInput = document.getElementById('rank_' + candidateId);
+                
+                if (rankDisplay && hiddenInput) {
+                    const rank = index + 1;
+                    rankDisplay.textContent = '#' + rank;
+                    hiddenInput.value = rank;
+                    
+                    // Trigger change event to ensure form validation
+                    hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+        }
+        
+        // Initialize ranks on page load
+        updateRanks();
+    }
+    
+    // Enable submit button after saving
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            preferencesExplicitlySaved = true;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Initially disable submit button
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        
+        // Check if preferences have been saved (looking for success messages)
+        const successMessages = document.querySelectorAll('[data-testid="alert-message"].alert-success');
+        for (let message of successMessages) {
+            if (message.textContent.includes('Preferences saved successfully')) {
+                submitBtn.disabled = false;
+                break;
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

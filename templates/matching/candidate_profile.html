@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">{{ candidate.display_name }}</h2>
+                <p class="lead mb-0">
+                    {% if candidate.role_in_cohort == "MENTOR" %}
+                        Mentor Profile
+                    {% else %}
+                        Mentee Profile
+                    {% endif %}
+                </p>
+            </div>
+            <a href="{% url 'matching:preferences' cohort_id=cohort.id %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Preferences
+            </a>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Profile Information</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if candidate.role_in_cohort == "MENTOR" %}
+                            {% if candidate.mentor_profile %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Professional Information</h6>
+                                        <p><strong>Job Title:</strong> {{ candidate.mentor_profile.job_title }}</p>
+                                        <p><strong>Function:</strong> {{ candidate.mentor_profile.function }}</p>
+                                        <p><strong>Organization:</strong> {{ candidate.organization }}</p>
+                                        <p><strong>Location:</strong> {{ candidate.mentor_profile.location }}</p>
+                                        <p><strong>Years of Experience:</strong> {{ candidate.mentor_profile.years_experience }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Skills & Expertise</h6>
+                                        {% if candidate.mentor_profile.get_expertise_tags_list %}
+                                            <p><strong>Expertise Areas:</strong></p>
+                                            <div class="mb-3">
+                                                {% for tag in candidate.mentor_profile.get_expertise_tags_list %}
+                                                    <span class="badge bg-primary me-1 mb-1">{{ tag }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if candidate.mentor_profile.get_languages_list %}
+                                            <p><strong>Languages:</strong></p>
+                                            <div class="mb-3">
+                                                {% for lang in candidate.mentor_profile.get_languages_list %}
+                                                    <span class="badge bg-secondary me-1 mb-1">{{ lang }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if candidate.mentor_profile.get_coaching_topics_list %}
+                                            <p><strong>Coaching Topics:</strong></p>
+                                            <div>
+                                                {% for topic in candidate.mentor_profile.get_coaching_topics_list %}
+                                                    <span class="badge bg-info me-1 mb-1">{{ topic }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                {% if candidate.mentor_profile.bio %}
+                                    <div class="mt-4">
+                                        <h6>About Me</h6>
+                                        <p>{{ candidate.mentor_profile.bio }}</p>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <p>No detailed mentor profile available.</p>
+                            {% endif %}
+                        {% else %}
+                            {% if candidate.mentee_profile %}
+                                <h6>Desired Mentor Attributes</h6>
+                                
+                                {% if candidate.mentee_profile.desired_attributes.preferred_expertise %}
+                                    <p><strong>Preferred Expertise:</strong></p>
+                                    <div class="mb-3">
+                                        {% for topic in candidate.mentee_profile.desired_attributes.preferred_expertise %}
+                                            <span class="badge bg-primary me-1 mb-1">{{ topic }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                
+                                {% if candidate.mentee_profile.desired_attributes.preferred_location %}
+                                    <p><strong>Preferred Location:</strong> {{ candidate.mentee_profile.desired_attributes.preferred_location }}</p>
+                                {% endif %}
+                                
+                                {% if candidate.mentee_profile.desired_attributes.preferred_languages %}
+                                    <p><strong>Preferred Languages:</strong> 
+                                        {{ candidate.mentee_profile.desired_attributes.preferred_languages|join:", " }}
+                                    </p>
+                                {% endif %}
+                                
+                                {% for key, value in candidate.mentee_profile.desired_attributes.items %}
+                                    {% if key not in "preferred_expertise,preferred_location,preferred_languages" %}
+                                        <p><strong>{{ key|title }}:</strong> {{ value }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if candidate.mentee_profile.notes %}
+                                    <div class="mt-4">
+                                        <h6>Additional Notes</h6>
+                                        <p>{{ candidate.mentee_profile.notes }}</p>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <p>No detailed mentee profile available.</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'matching:preferences' cohort_id=cohort.id %}" class="btn btn-primary w-100 mb-2">
+                            <i class="bi bi-list-ol"></i> Back to Ranking
+                        </a>
+                        <button class="btn btn-outline-secondary w-100" onclick="window.print()">
+                            <i class="bi bi-printer"></i> Print Profile
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">How to Use This Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Use this profile information to help you rank candidates:</p>
+                        <ul>
+                            <li>Look for expertise that matches your interests</li>
+                            <li>Consider location preferences for meetings</li>
+                            <li>Check languages for communication needs</li>
+                            <li>Review coaching topics for relevance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
