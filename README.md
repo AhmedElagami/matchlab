@@ -34,3 +34,5 @@ Server-rendered Django app that matches mentors and mentees in cohorts using OR-
 
 ## Local artifacts
 - Local runtime files like `.env`, `db.sqlite3`, `venv/`, and caches should remain uncommitted (see `.gitignore`).
+
+## Full Documentation at https://deepwiki.com/AhmedElagami/matchlab
