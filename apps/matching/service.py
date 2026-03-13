@@ -48,7 +48,12 @@ def run_matching(cohort: Cohort, user, mode: str = "STRICT") -> MatchRun:
     )
 
     try:
-        # Step 1: Prepare inputs (ORM isolation layer)
+        # Step 1: Ensure pair scores are fresh
+        from apps.matching.scoring import compute_all_pair_scores
+
+        compute_all_pair_scores(cohort)
+
+        # Step 2: Prepare inputs (ORM isolation layer)
         inputs = prepare_inputs(cohort)
 
         # Step 2: Solve with appropriate solver (pure functions)

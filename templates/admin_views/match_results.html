@@ -101,6 +101,38 @@
         </div>
         
         {% if match_run.status == 'SUCCESS' %}
+        <!-- Scoring Methodology -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center" role="button" data-bs-toggle="collapse" data-bs-target="#scoringInfo" aria-expanded="false">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> How Scores Are Calculated</h5>
+                <small class="text-muted">Click to expand</small>
+            </div>
+            <div class="collapse" id="scoringInfo">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>Match %</h6>
+                            <p>Based purely on mutual preference rank. Each side's rank is scored linearly (rank 1 = 100%, last rank = 0%), then both sides are averaged.</p>
+                            <p class="mb-0"><small class="text-muted">Example: Mentor ranks mentee #1 of 5 (100%) and mentee ranks mentor #3 of 5 (50%) → Match = 75%.</small></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><span class="badge bg-warning text-dark">Ambiguous</span></h6>
+                            <p>A match is flagged ambiguous when the score gap between the assigned partner and the next-best alternative is <strong>≤ 5 percentage points</strong>. This means another pairing was almost equally good — consider reviewing.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><span class="badge bg-danger">Exception</span></h6>
+                            <p>Policy violations allowed in exception mode:</p>
+                            <ul class="mb-0">
+                                <li><strong>E1</strong> — One-sided: only one participant ranked the other</li>
+                                <li><strong>E2</strong> — Neither participant ranked the other</li>
+                                <li><strong>E3</strong> — Same organization (most severe)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <h5>Match Results</h5>

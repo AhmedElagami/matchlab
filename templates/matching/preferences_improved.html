@@ -133,20 +133,8 @@
                                                     {% endfor %}
                                                 </div>
                                                 {% endif %}
-                                                {% if candidate.mentor_profile.location %}
-                                                <div><small><i class="bi bi-geo-alt"></i> {{ candidate.mentor_profile.location }}</small></div>
-                                                {% endif %}
                                                 {% if candidate.mentor_profile.years_experience %}
                                                 <div><small><i class="bi bi-calendar"></i> {{ candidate.mentor_profile.years_experience }} years exp</small></div>
-                                                {% endif %}
-                                                {% if candidate.mentor_profile.get_languages_list %}
-                                                <div>
-                                                    <small><i class="bi bi-translate"></i> 
-                                                    {% for lang in candidate.mentor_profile.get_languages_list %}
-                                                        {{ lang }}{% if not forloop.last %}, {% endif %}
-                                                    {% endfor %}
-                                                    </small>
-                                                </div>
                                                 {% endif %}
                                             </div>
                                             {% endif %}
@@ -160,9 +148,6 @@
                                                         <span class="tag-badge">{{ topic }}</span>
                                                     {% endfor %}
                                                 </div>
-                                                {% endif %}
-                                                {% if candidate.mentee_profile.desired_attributes.preferred_location %}
-                                                <div><small><i class="bi bi-geo-alt"></i> {{ candidate.mentee_profile.desired_attributes.preferred_location }}</small></div>
                                                 {% endif %}
                                             </div>
                                             {% endif %}

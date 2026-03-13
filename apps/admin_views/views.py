@@ -33,20 +33,8 @@ def mentee_desired_attributes_view(request, cohort_id):
     if request.method == "POST":
         form = MenteeDesiredAttributesForm(request.POST, participant=participant)
         if form.is_valid():
-            # Save desired attributes as JSON
-            desired_attributes = {}
-
-            # Process boolean attributes
-            for field_name in form.fields:
-                if field_name.startswith("desired_attr_"):
-                    attr_key = field_name.replace("desired_attr_", "")
-                    desired_attributes[attr_key] = form.cleaned_data.get(
-                        field_name, False
-                    )
-
-            # Save to profile
-            mentee_profile.desired_attributes = desired_attributes
-            mentee_profile.notes = form.cleaned_data.get("notes", "")
+            mentee_profile.desired_attributes = {}
+            mentee_profile.bio = form.cleaned_data.get("bio", "")
             mentee_profile.save()
 
             messages.success(request, "Your preferences have been saved.")
@@ -54,14 +42,9 @@ def mentee_desired_attributes_view(request, cohort_id):
                 "admin_views:mentee_desired_attributes", cohort_id=cohort_id
             )
     else:
-        # Prepopulate form with existing data
         initial_data = {
-            "notes": mentee_profile.notes,
+            "bio": mentee_profile.bio,
         }
-
-        # Prepopulate boolean attributes
-        for attr_key, attr_value in mentee_profile.desired_attributes.items():
-            initial_data[f"desired_attr_{attr_key}"] = attr_value
 
         form = MenteeDesiredAttributesForm(
             initial=initial_data, participant=participant

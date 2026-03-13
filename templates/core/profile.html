@@ -93,12 +93,6 @@
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="location" class="form-label">Location</label>
-                                <input type="text" class="form-control" id="location" name="location" 
-                                       value="{{ mentor_profile.location|default:'' }}"
-                                       placeholder="e.g., San Francisco, Remote">
-                            </div>
-                            <div class="col-md-6 mb-3">
                                 <label for="years_experience" class="form-label">Years of Experience</label>
                                 <input type="number" class="form-control" id="years_experience" name="years_experience" 
                                        value="{{ mentor_profile.years_experience|default:'' }}"
@@ -115,22 +109,6 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="languages" class="form-label">Languages</label>
-                            <input type="text" class="form-control" id="languages" name="languages" 
-                                   value="{{ mentor_profile.languages|default:'' }}"
-                                   placeholder="e.g., english, spanish, mandarin">
-                            <div class="form-text">Comma-separated list of languages you speak</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="coaching_topics" class="form-label">Coaching Topics</label>
-                            <input type="text" class="form-control" id="coaching_topics" name="coaching_topics" 
-                                   value="{{ mentor_profile.coaching_topics|default:'' }}"
-                                   placeholder="e.g., career development, technical leadership, work-life balance">
-                            <div class="form-text">Comma-separated list of topics you can help with</div>
-                        </div>
-                        
-                        <div class="mb-3">
                             <label for="bio" class="form-label">Bio</label>
                             <textarea class="form-control" id="bio" name="bio" rows="4" 
                                       placeholder="Tell mentees about yourself, your experience, and what you can offer...">{{ mentor_profile.bio|default:'' }}</textarea>
@@ -138,6 +116,30 @@
                         
                     {% else %}
                         <!-- Mentee Profile Fields -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job_title" class="form-label">Job Title</label>
+                                <input type="text" class="form-control" id="job_title" name="job_title" 
+                                       value="{{ mentee_profile.job_title|default:'' }}"
+                                       placeholder="e.g., Junior Developer, Product Analyst">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="function" class="form-label">Function/Department</label>
+                                <input type="text" class="form-control" id="function" name="function" 
+                                       value="{{ mentee_profile.function|default:'' }}"
+                                       placeholder="e.g., Engineering, Product, Design">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="years_experience" class="form-label">Years of Experience</label>
+                                <input type="number" class="form-control" id="years_experience" name="years_experience" 
+                                       value="{{ mentee_profile.years_experience|default:'' }}"
+                                       min="0" max="50">
+                            </div>
+                        </div>
+                        
                         <div class="mb-3">
                             <label for="preferred_expertise" class="form-label">Preferred Mentor Expertise</label>
                             <input type="text" class="form-control" id="preferred_expertise" name="preferred_expertise" 
@@ -146,26 +148,10 @@
                             <div class="form-text">Comma-separated list of expertise you're looking for in a mentor</div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="preferred_location" class="form-label">Preferred Location</label>
-                                <input type="text" class="form-control" id="preferred_location" name="preferred_location" 
-                                       value="{{ mentee_profile.desired_attributes.preferred_location|default:'' }}"
-                                       placeholder="e.g., San Francisco, Remote, Any">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="preferred_languages" class="form-label">Preferred Languages</label>
-                                <input type="text" class="form-control" id="preferred_languages" name="preferred_languages" 
-                                       value="{{ mentee_profile.desired_attributes.preferred_languages|join:', '|default:'' }}"
-                                       placeholder="e.g., english, spanish">
-                                <div class="form-text">Comma-separated list of languages you prefer</div>
-                            </div>
-                        </div>
-                        
                         <div class="mb-3">
-                            <label for="notes" class="form-label">Additional Notes</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="4" 
-                                      placeholder="Tell mentors about what you're looking for, your goals, and what kind of guidance you need...">{{ mentee_profile.notes|default:'' }}</textarea>
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="4" 
+                                      placeholder="Tell mentors about what you're looking for, your goals, and what kind of guidance you need...">{{ mentee_profile.bio|default:'' }}</textarea>
                         </div>
                     {% endif %}
                     

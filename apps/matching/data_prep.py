@@ -186,19 +186,15 @@ def _get_scaled_scores(
 
 def _get_config(cohort: Cohort) -> Dict[str, any]:
     """Get configuration parameters."""
-    # Default configuration values (from scoring.py)
     DEFAULT_CONFIG = {
-        "rank_weight": 0.6,
-        "tag_overlap_weight": 0.2,
-        "attribute_match_weight": 0.2,
         "min_options_strict": 3,
-        "strict_time_limit": 5,  # seconds
-        "exception_time_limit": 10,  # seconds
+        "strict_time_limit": 5,
+        "exception_time_limit": 10,
         "penalty_org": 1000000,
         "penalty_one_sided": 100000,
         "penalty_neither": 300000,
         "score_scale": 1000,
-        "ambiguity_gap_threshold": 5.0,
+        "ambiguity_gap_threshold": 5.0,  # percentage points (0-100 scale)
     }
 
     config = DEFAULT_CONFIG.copy()

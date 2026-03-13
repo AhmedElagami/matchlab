@@ -26,18 +26,8 @@ class PreferenceAdmin(admin.ModelAdmin):
 
 @admin.register(MentorProfile)
 class MentorProfileAdmin(admin.ModelAdmin):
-    list_display = (
-        "participant",
-        "job_title",
-        "function",
-        "location",
-        "years_experience",
-    )
-    list_filter = (
-        "participant__cohort",
-        "function",
-        "location",
-    )
+    list_display = ("participant", "job_title", "function", "years_experience")
+    list_filter = ("participant__cohort", "function")
     search_fields = (
         "participant__display_name",
         "participant__user__email",
@@ -50,19 +40,15 @@ class MentorProfileAdmin(admin.ModelAdmin):
 
 @admin.register(MenteeProfile)
 class MenteeProfileAdmin(admin.ModelAdmin):
-    list_display = (
-        "participant",
-        "get_desired_attributes_count",
-    )
+    list_display = ("participant", "job_title", "function", "years_experience")
+    list_filter = ("participant__cohort", "function")
     search_fields = (
         "participant__display_name",
         "participant__user__email",
+        "job_title",
+        "function",
     )
     ordering = ("participant__cohort", "participant__display_name")
-
-    def get_desired_attributes_count(self, obj):
-        return len(obj.desired_attributes)
-    get_desired_attributes_count.short_description = "Desired Attributes Count"
 
 
 @admin.register(ImportJob)

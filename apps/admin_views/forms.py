@@ -17,15 +17,14 @@ class MenteeDesiredAttributesForm(forms.Form):
         ),
     )
 
-    # We'll dynamically add checkboxes for boolean attributes
-    notes = forms.CharField(
-        label="Additional Notes",
+    bio = forms.CharField(
+        label="Bio",
         required=False,
         widget=forms.Textarea(
             attrs={
                 "class": "form-control",
                 "rows": 4,
-                "placeholder": "Any additional information about your preferred mentor...",
+                "placeholder": "Tell us about yourself, your goals, and what kind of guidance you need...",
             }
         ),
     )
@@ -33,23 +32,3 @@ class MenteeDesiredAttributesForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.participant = kwargs.pop("participant", None)
         super().__init__(*args, **kwargs)
-
-        # Add dynamic boolean attributes as checkboxes
-        # In a real implementation, these would come from a configuration or database
-        boolean_attributes = [
-            ("same_organization_ok", "Okay with mentor from same organization"),
-            ("remote_ok", "Okay with remote mentoring"),
-            ("industry_experience_required", "Prefer mentor with industry experience"),
-        ]
-
-        for attr_key, attr_label in boolean_attributes:
-            self.fields[f"desired_attr_{attr_key}"] = forms.BooleanField(
-                label=attr_label,
-                required=False,
-                widget=forms.CheckboxInput(
-                    attrs={
-                        "class": "form-check-input",
-                        "data-testid": f"desired-attr-{attr_key}",
-                    }
-                ),
-            )

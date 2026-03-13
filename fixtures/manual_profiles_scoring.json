@@ -133,10 +133,7 @@
       "job_title": "Staff Engineer",
       "function": "Engineering",
       "expertise_tags": "python, data, mentoring",
-      "languages": "english, spanish",
-      "location": "Remote",
       "years_experience": 12,
-      "coaching_topics": "career growth, architecture",
       "bio": "Focused on building scalable systems and coaching new engineers.",
       "created_at": "2026-02-01T09:35:00Z",
       "updated_at": "2026-02-01T09:35:00Z"
@@ -150,10 +147,7 @@
       "job_title": "Product Lead",
       "function": "Product",
       "expertise_tags": "product, leadership, strategy",
-      "languages": "english",
-      "location": "NYC",
       "years_experience": 9,
-      "coaching_topics": "product strategy, stakeholder management",
       "bio": "Helping teams ship customer-focused products.",
       "created_at": "2026-02-01T09:35:00Z",
       "updated_at": "2026-02-01T09:35:00Z"
@@ -164,12 +158,13 @@
     "pk": 94001,
     "fields": {
       "participant": 20071,
+      "job_title": "Junior Developer",
+      "function": "Engineering",
+      "years_experience": 2,
       "desired_attributes": {
-        "preferred_expertise": ["python", "data"],
-        "preferred_location": "Remote",
-        "preferred_languages": ["english"]
+        "preferred_expertise": ["python", "data"]
       },
-      "notes": "Interested in backend systems and data pipelines.",
+      "bio": "Interested in backend systems and data pipelines.",
       "created_at": "2026-02-01T09:35:00Z",
       "updated_at": "2026-02-01T09:35:00Z"
     }
@@ -179,12 +174,13 @@
     "pk": 94002,
     "fields": {
       "participant": 20072,
+      "job_title": "Product Analyst",
+      "function": "Product",
+      "years_experience": 3,
       "desired_attributes": {
-        "preferred_expertise": ["product"],
-        "preferred_location": "NYC",
-        "preferred_languages": ["english"]
+        "preferred_expertise": ["product"]
       },
-      "notes": "Looking for guidance on product strategy and leadership.",
+      "bio": "Looking for guidance on product strategy and leadership.",
       "created_at": "2026-02-01T09:35:00Z",
       "updated_at": "2026-02-01T09:35:00Z"
     }
@@ -259,86 +255,6 @@
       "from_participant": 20072,
       "to_participant": 20061,
       "rank": 2
-    }
-  },
-  {
-    "model": "matching.pairscore",
-    "pk": 95001,
-    "fields": {
-      "cohort": 2005,
-      "mentor": 20061,
-      "mentee": 20071,
-      "score": 88.0,
-      "score_breakdown": {
-        "rank_score": 100.0,
-        "rank_component": 60.0,
-        "tag_overlap_score": 80.0,
-        "tag_component": 16.0,
-        "attribute_match_score": 60.0,
-        "attribute_component": 12.0,
-        "overall_score": 88.0
-      },
-      "computed_at": "2026-02-01T09:40:00Z"
-    }
-  },
-  {
-    "model": "matching.pairscore",
-    "pk": 95002,
-    "fields": {
-      "cohort": 2005,
-      "mentor": 20061,
-      "mentee": 20072,
-      "score": 40.0,
-      "score_breakdown": {
-        "rank_score": 50.0,
-        "rank_component": 30.0,
-        "tag_overlap_score": 10.0,
-        "tag_component": 2.0,
-        "attribute_match_score": 40.0,
-        "attribute_component": 8.0,
-        "overall_score": 40.0
-      },
-      "computed_at": "2026-02-01T09:40:00Z"
-    }
-  },
-  {
-    "model": "matching.pairscore",
-    "pk": 95003,
-    "fields": {
-      "cohort": 2005,
-      "mentor": 20062,
-      "mentee": 20071,
-      "score": 45.0,
-      "score_breakdown": {
-        "rank_score": 50.0,
-        "rank_component": 30.0,
-        "tag_overlap_score": 20.0,
-        "tag_component": 4.0,
-        "attribute_match_score": 35.0,
-        "attribute_component": 7.0,
-        "overall_score": 45.0
-      },
-      "computed_at": "2026-02-01T09:40:00Z"
-    }
-  },
-  {
-    "model": "matching.pairscore",
-    "pk": 95004,
-    "fields": {
-      "cohort": 2005,
-      "mentor": 20062,
-      "mentee": 20072,
-      "score": 90.0,
-      "score_breakdown": {
-        "rank_score": 100.0,
-        "rank_component": 60.0,
-        "tag_overlap_score": 70.0,
-        "tag_component": 14.0,
-        "attribute_match_score": 80.0,
-        "attribute_component": 16.0,
-        "overall_score": 90.0
-      },
-      "computed_at": "2026-02-01T09:40:00Z"
     }
   }
 ]

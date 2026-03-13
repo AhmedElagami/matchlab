@@ -196,8 +196,6 @@
         "rank_component": 60.0,
         "tag_overlap_score": 25.0,
         "tag_component": 5.0,
-        "attribute_match_score": 25.0,
-        "attribute_component": 5.0,
         "overall_score": 70.0
       },
       "computed_at": "2026-02-01T10:15:00Z"
@@ -216,8 +214,6 @@
         "rank_component": 60.0,
         "tag_overlap_score": 20.0,
         "tag_component": 4.0,
-        "attribute_match_score": 20.0,
-        "attribute_component": 4.0,
         "overall_score": 68.0
       },
       "computed_at": "2026-02-01T10:15:00Z"

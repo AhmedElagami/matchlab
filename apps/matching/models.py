@@ -38,10 +38,7 @@ class MentorProfile(models.Model):
     job_title = models.CharField(max_length=200, blank=True)
     function = models.CharField(max_length=200, blank=True)
     expertise_tags = models.TextField(blank=True, help_text="Comma-separated tags")
-    languages = models.TextField(blank=True, help_text="Comma-separated language codes")
-    location = models.CharField(max_length=200, blank=True)
     years_experience = models.IntegerField(null=True, blank=True)
-    coaching_topics = models.TextField(blank=True, help_text="Comma-separated topics")
     bio = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -58,18 +55,6 @@ class MentorProfile(models.Model):
             return [tag.strip() for tag in self.expertise_tags.split(",")]  # type: ignore
         return []
 
-    def get_languages_list(self):
-        """Return languages as a list."""
-        if self.languages:
-            return [lang.strip() for lang in self.languages.split(",")]  # type: ignore
-        return []
-
-    def get_coaching_topics_list(self):
-        """Return coaching topics as a list."""
-        if self.coaching_topics:
-            return [topic.strip() for topic in self.coaching_topics.split(",")]  # type: ignore
-        return []
-
 
 class MenteeProfile(models.Model):
     """Extended profile information for mentees."""
@@ -77,8 +62,11 @@ class MenteeProfile(models.Model):
     participant = models.OneToOneField(
         Participant, on_delete=models.CASCADE, related_name="mentee_profile"
     )
+    job_title = models.CharField(max_length=200, blank=True)
+    function = models.CharField(max_length=200, blank=True)
+    years_experience = models.IntegerField(null=True, blank=True)
     desired_attributes = models.JSONField(default=dict, blank=True)
-    notes = models.TextField(blank=True)
+    bio = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

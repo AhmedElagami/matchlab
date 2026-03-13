@@ -91,108 +91,73 @@ def get_exception_priority(exception_type: str) -> int:
 
 
 def detect_ambiguity(matches: list, inputs: PreparedInputs) -> list:
-    """
-    Detect ambiguous matches based on score gaps.
+    """Detect ambiguous matches based on score gaps.
 
-    This is a pure function that operates on prepared inputs.
+    Scores in inputs.score are scaled integers (raw × score_scale).
+    ambiguity_gap_threshold is in percentage points (0-100 scale).
+    We convert to percentage scale before comparing.
     """
     if not matches:
         return []
 
-    # Create match lookup for quick access
-    match_lookup = {(m["mentor_id"], m["mentee_id"]): m for m in matches}
-
-    # For each participant, find their best alternative
+    scale = inputs.config.get("score_scale", 1000)
+    gap_threshold = inputs.config.get("ambiguity_gap_threshold", 5.0)
     ambiguities = []
 
-    # Check for each mentee
+    def _check_ambiguity(participant_id, matched_id, is_mentee):
+        """Check if a participant's match is ambiguous vs their best alternative."""
+        matched_score = inputs.score[(matched_id, participant_id)] if is_mentee else inputs.score[(participant_id, matched_id)]
+        matched_pct = matched_score / scale
+
+        # Find best alternative
+        best_alt_pct = -1
+        best_alt_id = None
+        candidates = inputs.mentor_ids if is_mentee else inputs.mentee_ids
+        for cid in candidates:
+            if cid == matched_id:
+                continue
+            s = inputs.score[(cid, participant_id)] if is_mentee else inputs.score[(participant_id, cid)]
+            pct = s / scale
+            if pct > best_alt_pct:
+                best_alt_pct = pct
+                best_alt_id = cid
+
+        if best_alt_id is not None and (matched_pct - best_alt_pct) <= gap_threshold:
+            gap = matched_pct - best_alt_pct
+            return {
+                "participant_id": participant_id,
+                "matched_with_id": matched_id,
+                "matched_score": matched_score,
+                "alternative_id": best_alt_id,
+                "alternative_score": int(best_alt_pct * scale),
+                "gap": int(gap * scale),
+                "reason": f"Matched score ({matched_pct:.1f}%) vs alternative ({best_alt_pct:.1f}%) — gap {gap:.1f} ≤ {gap_threshold}",
+            }
+        return None
+
+    # Build match lookup: mentee→mentor and mentor→mentee
+    mentee_to_mentor = {}
+    mentor_to_mentee = {}
+    for m in matches:
+        mentee_to_mentor[m["mentee_id"]] = m["mentor_id"]
+        mentor_to_mentee[m["mentor_id"]] = m["mentee_id"]
+
+    # Check each mentee
     for mentee_id in inputs.mentee_ids:
-        # Find mentee's matched mentor
-        matched_mentor_id = None
-        for match in matches:
-            if match["mentee_id"] == mentee_id:
-                matched_mentor_id = match["mentor_id"]
-                break
+        if mentee_id in mentee_to_mentor:
+            amb = _check_ambiguity(mentee_id, mentee_to_mentor[mentee_id], is_mentee=True)
+            if amb:
+                ambiguities.append(amb)
 
-        if matched_mentor_id:
-            # Get matched score
-            matched_score = inputs.score[(matched_mentor_id, mentee_id)]
-
-            # Find best alternative mentor for this mentee
-            best_alt_score = -1
-            best_alt_mentor_id = None
-
-            for mentor_id in inputs.mentor_ids:
-                if mentor_id != matched_mentor_id:  # Skip matched mentor
-                    score = inputs.score[(mentor_id, mentee_id)]
-                    if score > best_alt_score:
-                        best_alt_score = score
-                        best_alt_mentor_id = mentor_id
-
-            # Check if gap is small enough to be ambiguous
-            gap_threshold = inputs.config.get("ambiguity_gap_threshold", 5.0)
-            if best_alt_mentor_id and (matched_score - best_alt_score) <= gap_threshold:
-                ambiguities.append(
-                    {
-                        "participant_id": mentee_id,
-                        "matched_with_id": matched_mentor_id,
-                        "matched_score": matched_score,
-                        "alternative_id": best_alt_mentor_id,
-                        "alternative_score": best_alt_score,
-                        "gap": matched_score - best_alt_score,
-                        "reason": f"Matched score ({matched_score / 1000:.1f}) vs alternative ({best_alt_score / 1000:.1f}) gap is small ({(matched_score - best_alt_score) / 1000:.1f} <= {gap_threshold})",
-                    }
-                )
-
-    # Check for each mentor (similar logic)
+    # Check each mentor (skip if already recorded from mentee side)
+    recorded = {(a["matched_with_id"], a["participant_id"]) for a in ambiguities}
     for mentor_id in inputs.mentor_ids:
-        # Find mentor's matched mentee
-        matched_mentee_id = None
-        for match in matches:
-            if match["mentor_id"] == mentor_id:
-                matched_mentee_id = match["mentee_id"]
-                break
-
-        if matched_mentee_id:
-            # Get matched score
-            matched_score = inputs.score[(mentor_id, matched_mentee_id)]
-
-            # Find best alternative mentee for this mentor
-            best_alt_score = -1
-            best_alt_mentee_id = None
-
-            for mentee_id in inputs.mentee_ids:
-                if mentee_id != matched_mentee_id:  # Skip matched mentee
-                    score = inputs.score[(mentor_id, mentee_id)]
-                    if score > best_alt_score:
-                        best_alt_score = score
-                        best_alt_mentee_id = mentee_id
-
-            # Check if gap is small enough to be ambiguous
-            gap_threshold = inputs.config.get("ambiguity_gap_threshold", 5.0)
-            if best_alt_mentee_id and (matched_score - best_alt_score) <= gap_threshold:
-                # Check if we already recorded this ambiguity from the mentee perspective
-                already_recorded = False
-                for amb in ambiguities:
-                    if (
-                        amb["participant_id"] == matched_mentee_id
-                        and amb["matched_with_id"] == mentor_id
-                    ):
-                        already_recorded = True
-                        break
-
-                if not already_recorded:
-                    ambiguities.append(
-                        {
-                            "participant_id": mentor_id,
-                            "matched_with_id": matched_mentee_id,
-                            "matched_score": matched_score,
-                            "alternative_id": best_alt_mentee_id,
-                            "alternative_score": best_alt_score,
-                            "gap": matched_score - best_alt_score,
-                            "reason": f"Matched score ({matched_score / 1000:.1f}) vs alternative ({best_alt_score / 1000:.1f}) gap is small ({(matched_score - best_alt_score) / 1000:.1f} <= {gap_threshold})",
-                        }
-                    )
+        if mentor_id in mentor_to_mentee:
+            mentee_id = mentor_to_mentee[mentor_id]
+            if (mentee_id, mentor_id) not in recorded:
+                amb = _check_ambiguity(mentor_id, mentee_id, is_mentee=False)
+                if amb:
+                    ambiguities.append(amb)
 
     return ambiguities
 
