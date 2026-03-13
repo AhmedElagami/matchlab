@@ -112,23 +112,36 @@ def create_manual_override(
 
     try:
         with transaction.atomic():
-            # Delete any existing matches for both the mentor and mentee
-            # This breaks their current pairings and leaves their previous partners unmatched
-            Match.objects.filter(match_run=match_run, mentor=mentor).delete()
-            Match.objects.filter(match_run=match_run, mentee=mentee).delete()
-            
-            # Create the new manual override match
-            match_obj = Match.objects.create(
-                match_run=match_run,
-                mentor=mentor,
-                mentee=mentee,
-                score_percent=0,  # Manual overrides don't have computed scores
-                is_manual_override=True,
-                override_reason=override_reason,
-                exception_flag=bool(exception_type),
-                exception_type=exception_type,
-                exception_reason=exception_reason,
-            )
+            # Look for existing match with this mentor
+            try:
+                mentor_match = Match.objects.get(match_run=match_run, mentor=mentor)
+                # Update existing match
+                mentor_match.mentee = mentee
+                mentor_match.is_manual_override = True
+                mentor_match.override_reason = override_reason
+                mentor_match.exception_flag = bool(exception_type)
+                mentor_match.exception_type = exception_type
+                mentor_match.exception_reason = exception_reason
+                mentor_match.save()
+                match_obj = mentor_match
+            except Match.DoesNotExist:
+                # Create new match
+                match_obj = Match.objects.create(
+                    match_run=match_run,
+                    mentor=mentor,
+                    mentee=mentee,
+                    score_percent=0,  # Manual overrides don't have computed scores
+                    is_manual_override=True,
+                    override_reason=override_reason,
+                    exception_flag=bool(exception_type),
+                    exception_type=exception_type,
+                    exception_reason=exception_reason,
+                )
+
+            # Also ensure the mentee isn't matched to someone else
+            Match.objects.filter(match_run=match_run, mentee=mentee).exclude(
+                mentor=mentor
+            ).delete()
 
     except Exception as e:
         return False, f"Error creating override: {str(e)}", None

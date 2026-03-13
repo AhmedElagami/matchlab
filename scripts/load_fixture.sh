@@ -9,7 +9,7 @@ fi
 
 FIXTURE_PATH="$1"
 
-cd /home/ubuntu/matchlab
+cd /home/ekhekho/matchlab/matchlab
 
 if [ ! -f "$FIXTURE_PATH" ]; then
   echo "Fixture not found: $FIXTURE_PATH"

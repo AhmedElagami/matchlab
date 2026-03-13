@@ -9,15 +9,16 @@ from django.utils import timezone
 from django.db import transaction
 from apps.core.models import Cohort, Participant
 from .models import MatchRun, Match
-from .data_prep import prepare_inputs
+from .data_prep import prepare_inputs, prepare_incremental_inputs
 from .solvers.strict import solve_strict
 from .solvers.exception import solve_exception
+from .solvers.incremental import solve_incremental
 from .domain import detect_ambiguity
 
 logger = logging.getLogger(__name__)
 
 
-def run_matching(cohort: Cohort, user, mode: str = "STRICT") -> MatchRun:
+def run_matching(cohort: Cohort, user, mode: str = "STRICT", base_match_run=None) -> MatchRun:
     """
     Run matching for a cohort in specified mode.
 
@@ -30,7 +31,8 @@ def run_matching(cohort: Cohort, user, mode: str = "STRICT") -> MatchRun:
     Args:
         cohort: The cohort to match
         user: The user initiating the run
-        mode: "STRICT" or "EXCEPTION"
+        mode: "STRICT", "EXCEPTION", or "INCREMENTAL"
+        base_match_run: For INCREMENTAL mode, the MatchRun to build upon
 
     Returns:
         MatchRun object with results
@@ -38,11 +40,19 @@ def run_matching(cohort: Cohort, user, mode: str = "STRICT") -> MatchRun:
     logger.info(f"Running {mode} matching for cohort {cohort.id}")
     start_time = time.time()
 
+    # Validate incremental mode requirements
+    if mode == "INCREMENTAL" and not base_match_run:
+        raise ValueError("INCREMENTAL mode requires a base_match_run")
+    
+    if mode == "INCREMENTAL" and base_match_run.status != "SUCCESS":
+        raise ValueError("base_match_run must have SUCCESS status for incremental matching")
+
     # Create match run record
     match_run = MatchRun.objects.create(
         cohort=cohort,
         created_by=user,
         mode=mode,
+        base_match_run=base_match_run if mode == "INCREMENTAL" else None,
         status="FAILED",  # Default to failed, update on success
         input_signature=_get_input_signature(cohort),
     )
@@ -55,12 +65,22 @@ def run_matching(cohort: Cohort, user, mode: str = "STRICT") -> MatchRun:
 
         # Step 2: Prepare inputs (ORM isolation layer)
         inputs = prepare_inputs(cohort)
+        # Step 1: Prepare inputs (ORM isolation layer)
+        if mode == "INCREMENTAL":
+            inputs = prepare_incremental_inputs(cohort, base_match_run)
+            # Copy existing matches from base run first
+            _copy_existing_matches(match_run, base_match_run)
+        else:
+            inputs = prepare_inputs(cohort)
 
         # Step 2: Solve with appropriate solver (pure functions)
         if mode == "STRICT":
             solver_result = solve_strict(inputs)
         elif mode == "EXCEPTION":
             solver_result = solve_exception(inputs)
+        elif mode == "INCREMENTAL":
+            # Use exception mode for incremental by default (more flexible)
+            solver_result = solve_incremental(inputs, use_exceptions=True)
         else:
             raise ValueError(f"Unsupported mode: {mode}")
 
@@ -167,6 +187,28 @@ def _handle_failed_result(match_run: MatchRun, solver_result: object) -> None:
     reason = solver_result.failure_report.get("reason", "UNKNOWN")
     logger.info(f"{match_run.mode} matching failed: {reason}")
 
+
+
+def _copy_existing_matches(new_match_run: MatchRun, base_match_run: MatchRun) -> None:
+    """Copy existing matches from base run to new incremental run."""
+    existing_matches = Match.objects.filter(match_run=base_match_run)
+    
+    logger.info(f"Copying {existing_matches.count()} existing matches to new run")
+    
+    for match in existing_matches:
+        Match.objects.create(
+            match_run=new_match_run,
+            mentor=match.mentor,
+            mentee=match.mentee,
+            score_percent=match.score_percent,
+            ambiguity_flag=match.ambiguity_flag,
+            ambiguity_reason=match.ambiguity_reason,
+            exception_flag=match.exception_flag,
+            exception_type=match.exception_type,
+            exception_reason=match.exception_reason,
+            is_manual_override=match.is_manual_override,
+            override_reason=match.override_reason,
+        )
 
 def _get_input_signature(cohort: Cohort) -> str:
     """

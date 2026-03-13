@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-cd /home/ubuntu/matchlab
+cd /home/ekhekho/matchlab/matchlab
 
 echo "Running migrations..."
 docker compose -f docker-compose.dev.yml exec -T app python manage.py migrate

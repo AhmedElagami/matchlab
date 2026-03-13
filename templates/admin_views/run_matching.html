@@ -49,15 +49,50 @@
     <input class="form-check-input" type="radio" name="mode" id="modeException" value="EXCEPTION" data-testid="mode-exception-radio">
     <label class="form-check-label" for="modeException">Exception Mode</label>
 </div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="mode" id="modeIncremental" value="INCREMENTAL" data-testid="mode-incremental-radio">
+    <label class="form-check-label" for="modeIncremental">Incremental Mode</label>
+</div>
                         </div>
                         <div class="form-text">
                             <strong>Strict Mode:</strong> Enforces all constraints (different org, mutual acceptability)<br>
-                            <strong>Exception Mode:</strong> Allows policy violations when strict matching is impossible
+                            <strong>Exception Mode:</strong> Allows policy violations when strict matching is impossible<br>
+                            <strong>Incremental Mode:</strong> Matches only unmatched participants, preserving existing matches
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" data-testid="run-strict-btn">Run Strict Matching</button>
+                    <div class="mb-3" id="baseMatchRunSelector" style="display: none;">
+                        <label class="form-label">Base Match Run (for Incremental Mode)</label>
+                        <select class="form-select" name="base_match_run_id" id="baseMatchRunSelect">
+                            <option value="">Select a successful match run...</option>
+                            {% for run in recent_runs %}
+                                {% if run.status == 'SUCCESS' %}
+                                    <option value="{{ run.id }}">Run #{{ run.id }} - {{ run.get_mode_display }} ({{ run.created_at|date:"Y-m-d H:i" }})</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Select the match run to build upon. Existing matches will be preserved.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" data-testid="run-strict-btn">Run Matching</button>
                 </form>
+                
+                <script>
+                    // Show/hide base match run selector based on mode
+                    document.querySelectorAll('input[name="mode"]').forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const selector = document.getElementById('baseMatchRunSelector');
+                            const select = document.getElementById('baseMatchRunSelect');
+                            if (this.value === 'INCREMENTAL') {
+                                selector.style.display = 'block';
+                                select.required = true;
+                            } else {
+                                selector.style.display = 'none';
+                                select.required = false;
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
         

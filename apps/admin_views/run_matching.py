@@ -26,9 +26,21 @@ def run_matching_view(request, cohort_id):
 
     if request.method == "POST":
         mode = request.POST.get("mode", "STRICT")
+        base_match_run_id = request.POST.get("base_match_run_id")
+        
+        # Get base match run for incremental mode
+        base_match_run = None
+        if mode == "INCREMENTAL":
+            if not base_match_run_id:
+                messages.error(request, "Incremental mode requires a base match run.")
+                return redirect("admin_views:run_matching", cohort_id=cohort_id)
+            base_match_run = get_object_or_404(MatchRun, id=base_match_run_id, cohort=cohort)
+            if base_match_run.status != "SUCCESS":
+                messages.error(request, "Base match run must be successful.")
+                return redirect("admin_views:run_matching", cohort_id=cohort_id)
 
         # Run matching using unified service
-        match_run = run_matching(cohort, request.user, mode)
+        match_run = run_matching(cohort, request.user, mode, base_match_run)
 
         if match_run.status == "SUCCESS":
             messages.success(

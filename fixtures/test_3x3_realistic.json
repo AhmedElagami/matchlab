@@ -1,0 +1,354 @@
+[
+  {
+    "model": "core.cohort",
+    "pk": 3001,
+    "fields": {
+      "name": "Test Cohort 3x3 Realistic",
+      "status": "OPEN",
+      "cohort_config": {},
+      "created_at": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 30001,
+    "fields": {
+      "username": "sarah.johnson",
+      "first_name": "Sarah",
+      "last_name": "Johnson",
+      "email": "sarah.johnson@techcorp.com",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 30002,
+    "fields": {
+      "username": "michael.chen",
+      "first_name": "Michael",
+      "last_name": "Chen",
+      "email": "michael.chen@innovate.com",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 30003,
+    "fields": {
+      "username": "emily.rodriguez",
+      "first_name": "Emily",
+      "last_name": "Rodriguez",
+      "email": "emily.rodriguez@techcorp.com",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 30004,
+    "fields": {
+      "username": "david.kim",
+      "first_name": "David",
+      "last_name": "Kim",
+      "email": "david.kim@startup.io",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 30005,
+    "fields": {
+      "username": "jessica.patel",
+      "first_name": "Jessica",
+      "last_name": "Patel",
+      "email": "jessica.patel@innovate.com",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 30006,
+    "fields": {
+      "username": "alex.thompson",
+      "first_name": "Alex",
+      "last_name": "Thompson",
+      "email": "alex.thompson@techcorp.com",
+      "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
+      "is_staff": false,
+      "is_active": true,
+      "is_superuser": false,
+      "date_joined": "2026-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 30101,
+    "fields": {
+      "cohort": 3001,
+      "user": 30001,
+      "role_in_cohort": "MENTOR",
+      "display_name": "Sarah Johnson",
+      "organization": "TechCorp",
+      "is_submitted": true,
+      "submitted_at": "2026-03-01T10:00:00Z",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 30102,
+    "fields": {
+      "cohort": 3001,
+      "user": 30002,
+      "role_in_cohort": "MENTOR",
+      "display_name": "Michael Chen",
+      "organization": "Innovate Inc",
+      "is_submitted": true,
+      "submitted_at": "2026-03-01T10:00:00Z",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 30103,
+    "fields": {
+      "cohort": 3001,
+      "user": 30003,
+      "role_in_cohort": "MENTOR",
+      "display_name": "Emily Rodriguez",
+      "organization": "TechCorp",
+      "is_submitted": true,
+      "submitted_at": "2026-03-01T10:00:00Z",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 30104,
+    "fields": {
+      "cohort": 3001,
+      "user": 30004,
+      "role_in_cohort": "MENTEE",
+      "display_name": "David Kim",
+      "organization": "Startup Labs",
+      "is_submitted": true,
+      "submitted_at": "2026-03-01T10:00:00Z",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 30105,
+    "fields": {
+      "cohort": 3001,
+      "user": 30005,
+      "role_in_cohort": "MENTEE",
+      "display_name": "Jessica Patel",
+      "organization": "Innovate Inc",
+      "is_submitted": true,
+      "submitted_at": "2026-03-01T10:00:00Z",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "core.participant",
+    "pk": 30106,
+    "fields": {
+      "cohort": 3001,
+      "user": 30006,
+      "role_in_cohort": "MENTEE",
+      "display_name": "Alex Thompson",
+      "organization": "TechCorp",
+      "is_submitted": true,
+      "submitted_at": "2026-03-01T10:00:00Z",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301001,
+    "fields": {
+      "from_participant": 30101,
+      "to_participant": 30104,
+      "rank": 1
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301002,
+    "fields": {
+      "from_participant": 30101,
+      "to_participant": 30105,
+      "rank": 2
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301003,
+    "fields": {
+      "from_participant": 30101,
+      "to_participant": 30106,
+      "rank": 3
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301004,
+    "fields": {
+      "from_participant": 30102,
+      "to_participant": 30105,
+      "rank": 1
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301005,
+    "fields": {
+      "from_participant": 30102,
+      "to_participant": 30104,
+      "rank": 2
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301006,
+    "fields": {
+      "from_participant": 30102,
+      "to_participant": 30106,
+      "rank": 3
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301007,
+    "fields": {
+      "from_participant": 30103,
+      "to_participant": 30106,
+      "rank": 1
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301008,
+    "fields": {
+      "from_participant": 30103,
+      "to_participant": 30104,
+      "rank": 2
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301009,
+    "fields": {
+      "from_participant": 30103,
+      "to_participant": 30105,
+      "rank": 3
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301010,
+    "fields": {
+      "from_participant": 30104,
+      "to_participant": 30102,
+      "rank": 1
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301011,
+    "fields": {
+      "from_participant": 30104,
+      "to_participant": 30101,
+      "rank": 2
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301012,
+    "fields": {
+      "from_participant": 30104,
+      "to_participant": 30103,
+      "rank": 3
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301013,
+    "fields": {
+      "from_participant": 30105,
+      "to_participant": 30102,
+      "rank": 1
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301014,
+    "fields": {
+      "from_participant": 30105,
+      "to_participant": 30101,
+      "rank": 2
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301015,
+    "fields": {
+      "from_participant": 30105,
+      "to_participant": 30103,
+      "rank": 3
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301016,
+    "fields": {
+      "from_participant": 30106,
+      "to_participant": 30103,
+      "rank": 1
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301017,
+    "fields": {
+      "from_participant": 30106,
+      "to_participant": 30101,
+      "rank": 2
+    }
+  },
+  {
+    "model": "matching.preference",
+    "pk": 301018,
+    "fields": {
+      "from_participant": 30106,
+      "to_participant": 30102,
+      "rank": 3
+    }
+  }
+]

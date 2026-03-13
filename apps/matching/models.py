@@ -141,6 +141,7 @@ class MatchRun(models.Model):
     MODE_CHOICES = [
         ("STRICT", "Strict"),
         ("EXCEPTION", "Exception"),
+        ("INCREMENTAL", "Incremental"),
     ]
 
     STATUS_CHOICES = [
@@ -150,8 +151,15 @@ class MatchRun(models.Model):
 
     cohort = models.ForeignKey(Cohort, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    mode = models.CharField(max_length=10, choices=MODE_CHOICES)
+    mode = models.CharField(max_length=15, choices=MODE_CHOICES)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    base_match_run = models.ForeignKey(
+        'self', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        help_text="Base match run for incremental matching"
+    )
     objective_summary = models.JSONField(
         default=dict, blank=True, help_text="Totals, exception counts, total score"
     )

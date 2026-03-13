@@ -200,3 +200,64 @@ def _get_config(cohort: Cohort) -> Dict[str, any]:
     config = DEFAULT_CONFIG.copy()
     config.update(cohort.cohort_config)
     return config
+
+
+def prepare_incremental_inputs(cohort: Cohort, base_match_run) -> PreparedInputs:
+    """
+    Prepare inputs for incremental matching - excludes already matched participants.
+    
+    Args:
+        cohort: The cohort to match
+        base_match_run: The MatchRun containing existing matches to preserve
+        
+    Returns:
+        PreparedInputs with only unmatched participants
+    """
+    from apps.matching.models import Match
+    
+    logger.info(f"Preparing incremental inputs for cohort {cohort.id} based on run {base_match_run.id}")
+    
+    # Get already matched participant IDs from base run
+    existing_matches = Match.objects.filter(match_run=base_match_run)
+    matched_mentor_ids = set(existing_matches.values_list('mentor_id', flat=True))
+    matched_mentee_ids = set(existing_matches.values_list('mentee_id', flat=True))
+    
+    logger.info(f"Excluding {len(matched_mentor_ids)} matched mentors and {len(matched_mentee_ids)} matched mentees")
+    
+    # Get only unmatched participants
+    mentors = list(
+        Participant.objects.filter(
+            cohort=cohort, 
+            role_in_cohort="MENTOR", 
+            is_submitted=True
+        ).exclude(id__in=matched_mentor_ids)
+    )
+    mentees = list(
+        Participant.objects.filter(
+            cohort=cohort, 
+            role_in_cohort="MENTEE", 
+            is_submitted=True
+        ).exclude(id__in=matched_mentee_ids)
+    )
+    
+    logger.info(f"Found {len(mentors)} unmatched mentors and {len(mentees)} unmatched mentees")
+    
+    # Extract IDs
+    mentor_ids = [m.id for m in mentors]
+    mentee_ids = [m.id for m in mentees]
+    
+    # Build matrices for unmatched participants only
+    same_org = _build_same_org_matrix(mentors, mentees)
+    acceptability = _build_acceptability_matrix(mentors, mentees)
+    score = _get_scaled_scores(mentors, mentees, cohort)
+    config = _get_config(cohort)
+    
+    return PreparedInputs(
+        mentor_ids=mentor_ids,
+        mentee_ids=mentee_ids,
+        same_org=same_org,
+        participant_orgs=_build_participant_orgs(mentors, mentees),
+        acceptability=acceptability,
+        score=score,
+        config=config,
+    )
