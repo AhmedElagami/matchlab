@@ -9,7 +9,9 @@ fi
 
 FIXTURE_PATH="$1"
 
-cd /home/ekhekho/matchlab/matchlab
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT"
 
 if [ ! -f "$FIXTURE_PATH" ]; then
   echo "Fixture not found: $FIXTURE_PATH"

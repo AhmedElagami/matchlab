@@ -3,6 +3,10 @@
 # MatchLab Testing Environment Reset Script
 # Resets database and prepares clean environment for testing
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT"
+
 echo "=== MatchLab Testing Environment Reset ==="
 
 # Confirm reset action
@@ -16,7 +20,6 @@ fi
 
 echo ""
 echo "1. Stopping Docker services..."
-cd /home/ekhekho/matchlab/matchlab
 docker compose -f docker-compose.dev.yml down -v
 
 if [ $? -eq 0 ]; then
@@ -72,7 +75,7 @@ fi
 
 echo ""
 echo "6. Verifying clean state..."
-cd /home/ekhekho/matchlab/matchlab && docker compose -f docker-compose.dev.yml exec app python manage.py shell -c "
+docker compose -f docker-compose.dev.yml exec app python manage.py shell -c "
 from apps.core.models import Cohort, Participant
 from apps.matching.models import MatchRun, Match
 from django.contrib.auth.models import User
