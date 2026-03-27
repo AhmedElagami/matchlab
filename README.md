@@ -3,8 +3,8 @@
 Server-rendered Django app that matches mentors and mentees in cohorts using OR-Tools, with strict and exception modes defined in `docs/design/TECHNICAL_SPEC.md`.
 
 ## Start here
+- Developer setup guide: `docs/design/DEVELOPER_GUIDE.md`
 - Product and business rules: `docs/design/TECHNICAL_SPEC.md`
-- Operations and deployment: `docs/design/OPERATIONAL_DOCS.md`
 - Architecture overview: `docs/architecture.md`
 - Folder map: `docs/folder-structure.md`
 
