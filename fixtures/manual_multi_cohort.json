@@ -24,8 +24,8 @@
     "pk": 23001,
     "fields": {
       "username": "multi_user",
-      "first_name": "Multi",
-      "last_name": "User",
+      "first_name": "Ádám",
+      "last_name": "Szilágyi",
       "email": "multi_user@example.com",
       "password": "pbkdf2_sha256$1200000$testsalt$b9N9PjqXMYktHdcW8c4gOmI2xApkd7rJhDCI6F7f6IE=",
       "is_staff": false,
@@ -41,8 +41,8 @@
       "cohort": 2003,
       "user": 23001,
       "role_in_cohort": "MENTOR",
-      "display_name": "Multi User",
-      "organization": "OrgMulti",
+      "display_name": "Ádám Szilágyi",
+      "organization": "Digital Automation",
       "is_submitted": false,
       "created_at": "2026-02-01T09:20:00Z",
       "updated_at": "2026-02-01T09:20:00Z"
@@ -55,8 +55,8 @@
       "cohort": 2004,
       "user": 23001,
       "role_in_cohort": "MENTOR",
-      "display_name": "Multi User",
-      "organization": "OrgMulti",
+      "display_name": "Ádám Szilágyi",
+      "organization": "Digital Automation",
       "is_submitted": false,
       "created_at": "2026-02-01T09:20:00Z",
       "updated_at": "2026-02-01T09:20:00Z"
