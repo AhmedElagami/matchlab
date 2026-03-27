@@ -85,7 +85,7 @@ class AdminViewsTest(TestCase):
         # Submit form data
         form_data = {
             "desired_tags": "backend,python,career growth",
-            "notes": "Looking for experienced backend mentor",
+            "bio": "Looking for experienced backend mentor",
             "desired_attr_same_organization_ok": True,
             "desired_attr_remote_ok": False,
         }
@@ -100,6 +100,6 @@ class AdminViewsTest(TestCase):
 
         # Check that the profile was updated
         mentee_profile = MenteeProfile.objects.get(participant=self.mentee_participant)
-        self.assertEqual(mentee_profile.notes, "Looking for experienced backend mentor")
+        self.assertEqual(mentee_profile.bio, "Looking for experienced backend mentor")
         self.assertTrue(mentee_profile.desired_attributes["same_organization_ok"])
         self.assertFalse(mentee_profile.desired_attributes["remote_ok"])
