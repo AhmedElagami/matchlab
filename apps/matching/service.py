@@ -259,10 +259,10 @@ def get_match_run_results(match_run: MatchRun) -> List[Dict[str, Any]]:
             {
                 "mentor_name": match.mentor.display_name,
                 "mentor_email": match.mentor.user.email,
-                "mentor_org": match.mentor.organization,
+                "mentor_org": str(match.mentor.organization or ""),
                 "mentee_name": match.mentee.display_name,
                 "mentee_email": match.mentee.user.email,
-                "mentee_org": match.mentee.organization,
+                "mentee_org": str(match.mentee.organization or ""),
                 "match_percent": match.score_percent,
                 "ambiguity_flag": match.ambiguity_flag,
                 "ambiguity_reason": match.ambiguity_reason,

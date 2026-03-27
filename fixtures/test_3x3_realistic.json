@@ -10,6 +10,27 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1,
+    "fields": {
+      "name": "Cloud & Edge Solutions"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 6,
+    "fields": {
+      "name": "Mobile Networks"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 7,
+    "fields": {
+      "name": "Network Infrastructure"
+    }
+  },
+  {
     "model": "auth.user",
     "pk": 30001,
     "fields": {
@@ -107,7 +128,7 @@
       "user": 30001,
       "role_in_cohort": "MENTOR",
       "display_name": "Virág Kelemen",
-      "organization": "Network Infrastructure",
+      "organization": 7,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -122,7 +143,7 @@
       "user": 30002,
       "role_in_cohort": "MENTOR",
       "display_name": "Nils Andersson",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -137,7 +158,7 @@
       "user": 30003,
       "role_in_cohort": "MENTOR",
       "display_name": "Csilla Barta",
-      "organization": "Network Infrastructure",
+      "organization": 7,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -152,7 +173,7 @@
       "user": 30004,
       "role_in_cohort": "MENTEE",
       "display_name": "Márton Szűcs",
-      "organization": "Mobile Networks",
+      "organization": 6,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -167,7 +188,7 @@
       "user": 30005,
       "role_in_cohort": "MENTEE",
       "display_name": "Hedvig Ström",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -182,7 +203,7 @@
       "user": 30006,
       "role_in_cohort": "MENTEE",
       "display_name": "Dániel Orbán",
-      "organization": "Network Infrastructure",
+      "organization": 7,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",

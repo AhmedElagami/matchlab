@@ -12,6 +12,41 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1,
+    "fields": {
+      "name": "Cloud & Edge Solutions"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 3,
+    "fields": {
+      "name": "Enterprise Solutions"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 5,
+    "fields": {
+      "name": "IP & Optical"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 6,
+    "fields": {
+      "name": "Mobile Networks"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 7,
+    "fields": {
+      "name": "Network Infrastructure"
+    }
+  },
+  {
     "model": "auth.user",
     "pk": 121,
     "fields": {
@@ -169,7 +204,7 @@
       "user": 121,
       "role_in_cohort": "MENTOR",
       "display_name": "Gábor Varga",
-      "organization": "Network Infrastructure",
+      "organization": 7,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -184,7 +219,7 @@
       "user": 122,
       "role_in_cohort": "MENTOR",
       "display_name": "Elsa Holm",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -199,7 +234,7 @@
       "user": 123,
       "role_in_cohort": "MENTOR",
       "display_name": "Chen Wei",
-      "organization": "Mobile Networks",
+      "organization": 6,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -214,7 +249,7 @@
       "user": 124,
       "role_in_cohort": "MENTOR",
       "display_name": "Kata Balogh",
-      "organization": "IP & Optical",
+      "organization": 5,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -229,7 +264,7 @@
       "user": 125,
       "role_in_cohort": "MENTOR",
       "display_name": "Magnus Lund",
-      "organization": "Enterprise Solutions",
+      "organization": 3,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -244,7 +279,7 @@
       "user": 126,
       "role_in_cohort": "MENTEE",
       "display_name": "Dóra Szabó",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -259,7 +294,7 @@
       "user": 127,
       "role_in_cohort": "MENTEE",
       "display_name": "Björn Dahl",
-      "organization": "Mobile Networks",
+      "organization": 6,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -274,7 +309,7 @@
       "user": 128,
       "role_in_cohort": "MENTEE",
       "display_name": "Aisha Hassan",
-      "organization": "IP & Optical",
+      "organization": 5,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -289,7 +324,7 @@
       "user": 129,
       "role_in_cohort": "MENTEE",
       "display_name": "Tamás Kiss",
-      "organization": "Enterprise Solutions",
+      "organization": 3,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -304,7 +339,7 @@
       "user": 130,
       "role_in_cohort": "MENTEE",
       "display_name": "Linnéa Åberg",
-      "organization": "Network Infrastructure",
+      "organization": 7,
       "is_submitted": false,
       "submitted_at": null,
       "created_at": "2026-01-30T10:00:00Z",

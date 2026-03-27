@@ -12,7 +12,7 @@ class ParticipantProfileForm(forms.ModelForm):
             "display_name": forms.TextInput(
                 attrs={"class": "form-control", "data-testid": "display-name-input"}
             ),
-            "organization": forms.TextInput(
+            "organization": forms.Select(
                 attrs={"class": "form-control", "data-testid": "organization-input"}
             ),
         }

@@ -93,7 +93,7 @@ def _build_same_org_matrix(
     for mentor in mentors:
         for mentee in mentees:
             same_org[(mentor.id, mentee.id)] = (
-                mentor.organization == mentee.organization
+                mentor.organization_id == mentee.organization_id
             )
 
     return same_org
@@ -105,9 +105,9 @@ def _build_participant_orgs(
     """Build lookup for participant organizations by ID."""
     orgs = {}
     for mentor in mentors:
-        orgs[mentor.id] = mentor.organization
+        orgs[mentor.id] = str(mentor.organization) if mentor.organization else ""
     for mentee in mentees:
-        orgs[mentee.id] = mentee.organization
+        orgs[mentee.id] = str(mentee.organization) if mentee.organization else ""
     return orgs
 
 

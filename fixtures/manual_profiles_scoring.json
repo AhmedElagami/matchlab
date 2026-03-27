@@ -10,6 +10,34 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1,
+    "fields": {
+      "name": "Cloud & Edge Solutions"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 5,
+    "fields": {
+      "name": "IP & Optical"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 6,
+    "fields": {
+      "name": "Mobile Networks"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 7,
+    "fields": {
+      "name": "Network Infrastructure"
+    }
+  },
+  {
     "model": "auth.user",
     "pk": 24001,
     "fields": {
@@ -77,7 +105,7 @@
       "user": 24001,
       "role_in_cohort": "MENTOR",
       "display_name": "István Bodnár",
-      "organization": "Network Infrastructure",
+      "organization": 7,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"
@@ -91,7 +119,7 @@
       "user": 24002,
       "role_in_cohort": "MENTOR",
       "display_name": "Alma Svensson",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"
@@ -105,7 +133,7 @@
       "user": 24003,
       "role_in_cohort": "MENTEE",
       "display_name": "Lilla Juhász",
-      "organization": "Mobile Networks",
+      "organization": 6,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"
@@ -119,7 +147,7 @@
       "user": 24004,
       "role_in_cohort": "MENTEE",
       "display_name": "Hugo Wallin",
-      "organization": "IP & Optical",
+      "organization": 5,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"

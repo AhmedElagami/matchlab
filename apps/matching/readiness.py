@@ -271,7 +271,7 @@ def get_org_distribution(cohort: Cohort) -> Dict[str, Dict[str, int]]:
 
     participants = Participant.objects.filter(cohort=cohort)
     for participant in participants:
-        org = participant.organization or "No Organization"
+        org = str(participant.organization) if participant.organization else "No Organization"
         role = participant.role_in_cohort
 
         if org not in org_stats:
