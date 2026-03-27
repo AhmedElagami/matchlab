@@ -55,7 +55,7 @@ class RegistrationForm(UserCreationForm):
     )
     role = forms.ChoiceField(
         choices=[("MENTOR", "Mentor"), ("MENTEE", "Mentee")],
-        widget=forms.RadioSelect(attrs={"class": "form-check-input"}),
+        widget=forms.RadioSelect(),
         required=True,
     )
 
