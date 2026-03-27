@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Cohort, Participant
 from .forms import ParticipantProfileForm, RegistrationForm
+from apps.matching.models import MentorProfile, MenteeProfile
 
 
 def logout_view(request):
@@ -50,7 +51,6 @@ def home_view(request):
 def profile_view(request, cohort_id):
     cohort = get_object_or_404(Cohort, id=cohort_id)
 
-    # Check if user is a participant in this cohort
     try:
         participant = Participant.objects.get(user=request.user, cohort=cohort)
     except Participant.DoesNotExist:
@@ -58,13 +58,28 @@ def profile_view(request, cohort_id):
         return redirect("core:home")
 
     if request.method == "POST":
-        form = ParticipantProfileForm(request.POST, instance=participant)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated successfully.")
+        form_type = request.POST.get("form_type")
+
+        if form_type == "detailed":
+            _save_detailed_profile(request, participant)
+            messages.success(request, "Profile details updated successfully.")
             return redirect("core:profile", cohort_id=cohort_id)
+        else:
+            form = ParticipantProfileForm(request.POST, instance=participant)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile updated successfully.")
+                return redirect("core:profile", cohort_id=cohort_id)
     else:
         form = ParticipantProfileForm(instance=participant)
+
+    # Load detailed profile for template context
+    mentor_profile = None
+    mentee_profile = None
+    if participant.role_in_cohort == "MENTOR":
+        mentor_profile, _ = MentorProfile.objects.get_or_create(participant=participant)
+    else:
+        mentee_profile, _ = MenteeProfile.objects.get_or_create(participant=participant)
 
     return render(
         request,
@@ -73,5 +88,30 @@ def profile_view(request, cohort_id):
             "form": form,
             "cohort": cohort,
             "participant": participant,
+            "mentor_profile": mentor_profile,
+            "mentee_profile": mentee_profile,
         },
     )
+
+
+def _save_detailed_profile(request, participant):
+    """Save the detailed mentor/mentee profile from POST data."""
+    if participant.role_in_cohort == "MENTOR":
+        profile, _ = MentorProfile.objects.get_or_create(participant=participant)
+        profile.job_title = request.POST.get("job_title", "")
+        profile.function = request.POST.get("function", "")
+        profile.years_experience = request.POST.get("years_experience") or None
+        profile.expertise_tags = request.POST.get("expertise_tags", "")
+        profile.bio = request.POST.get("bio", "")
+        profile.save()
+    else:
+        profile, _ = MenteeProfile.objects.get_or_create(participant=participant)
+        profile.job_title = request.POST.get("job_title", "")
+        profile.function = request.POST.get("function", "")
+        profile.years_experience = request.POST.get("years_experience") or None
+        preferred = request.POST.get("preferred_expertise", "")
+        profile.desired_attributes = {
+            "preferred_expertise": [t.strip() for t in preferred.split(",") if t.strip()]
+        }
+        profile.bio = request.POST.get("bio", "")
+        profile.save()

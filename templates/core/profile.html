@@ -80,12 +80,14 @@
                             <div class="col-md-6 mb-3">
                                 <label for="job_title" class="form-label">Job Title</label>
                                 <input type="text" class="form-control" id="job_title" name="job_title" 
+                                       data-testid="job-title-input"
                                        value="{{ mentor_profile.job_title|default:'' }}"
                                        placeholder="e.g., Senior Software Engineer">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="function" class="form-label">Function/Department</label>
                                 <input type="text" class="form-control" id="function" name="function" 
+                                       data-testid="function-input"
                                        value="{{ mentor_profile.function|default:'' }}"
                                        placeholder="e.g., Engineering, Product, Design">
                             </div>
@@ -95,6 +97,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="years_experience" class="form-label">Years of Experience</label>
                                 <input type="number" class="form-control" id="years_experience" name="years_experience" 
+                                       data-testid="years-experience-input"
                                        value="{{ mentor_profile.years_experience|default:'' }}"
                                        min="0" max="50">
                             </div>
@@ -103,6 +106,7 @@
                         <div class="mb-3">
                             <label for="expertise_tags" class="form-label">Expertise Tags</label>
                             <input type="text" class="form-control" id="expertise_tags" name="expertise_tags" 
+                                   data-testid="expertise-tags-input"
                                    value="{{ mentor_profile.expertise_tags|default:'' }}"
                                    placeholder="e.g., python, javascript, machine-learning, leadership">
                             <div class="form-text">Comma-separated list of your areas of expertise</div>
@@ -110,7 +114,7 @@
                         
                         <div class="mb-3">
                             <label for="bio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="4" 
+                            <textarea class="form-control" id="bio" name="bio" rows="4" data-testid="bio-input"
                                       placeholder="Tell mentees about yourself, your experience, and what you can offer...">{{ mentor_profile.bio|default:'' }}</textarea>
                         </div>
                         
@@ -120,12 +124,14 @@
                             <div class="col-md-6 mb-3">
                                 <label for="job_title" class="form-label">Job Title</label>
                                 <input type="text" class="form-control" id="job_title" name="job_title" 
+                                       data-testid="job-title-input"
                                        value="{{ mentee_profile.job_title|default:'' }}"
                                        placeholder="e.g., Junior Developer, Product Analyst">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="function" class="form-label">Function/Department</label>
                                 <input type="text" class="form-control" id="function" name="function" 
+                                       data-testid="function-input"
                                        value="{{ mentee_profile.function|default:'' }}"
                                        placeholder="e.g., Engineering, Product, Design">
                             </div>
@@ -135,6 +141,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="years_experience" class="form-label">Years of Experience</label>
                                 <input type="number" class="form-control" id="years_experience" name="years_experience" 
+                                       data-testid="years-experience-input"
                                        value="{{ mentee_profile.years_experience|default:'' }}"
                                        min="0" max="50">
                             </div>
@@ -143,6 +150,7 @@
                         <div class="mb-3">
                             <label for="preferred_expertise" class="form-label">Preferred Mentor Expertise</label>
                             <input type="text" class="form-control" id="preferred_expertise" name="preferred_expertise" 
+                                   data-testid="preferred-expertise-input"
                                    value="{{ mentee_profile.desired_attributes.preferred_expertise|join:', '|default:'' }}"
                                    placeholder="e.g., python, leadership, career growth">
                             <div class="form-text">Comma-separated list of expertise you're looking for in a mentor</div>
@@ -150,12 +158,12 @@
                         
                         <div class="mb-3">
                             <label for="bio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="4" 
+                            <textarea class="form-control" id="bio" name="bio" rows="4" data-testid="bio-input"
                                       placeholder="Tell mentors about what you're looking for, your goals, and what kind of guidance you need...">{{ mentee_profile.bio|default:'' }}</textarea>
                         </div>
                     {% endif %}
                     
-                    <button type="submit" class="btn btn-primary">Save Profile Details</button>
+                    <button type="submit" class="btn btn-primary" data-testid="save-details-button">Save Profile Details</button>
                 </form>
             </div>
         </div>
