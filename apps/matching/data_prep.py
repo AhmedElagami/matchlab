@@ -93,7 +93,7 @@ def _build_same_org_matrix(
     for mentor in mentors:
         for mentee in mentees:
             same_org[(mentor.id, mentee.id)] = (
-                mentor.organization_id == mentee.organization_id
+                mentor.organization == mentee.organization
             )
 
     return same_org

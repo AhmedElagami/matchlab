@@ -9,27 +9,6 @@
     }
   },
   {
-    "model": "core.organization",
-    "pk": 1,
-    "fields": {
-      "name": "Cloud & Edge Solutions"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 6,
-    "fields": {
-      "name": "Mobile Networks"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 7,
-    "fields": {
-      "name": "Network Infrastructure"
-    }
-  },
-  {
     "model": "auth.user",
     "pk": 101,
     "fields": {
@@ -127,7 +106,7 @@
       "user": 101,
       "role_in_cohort": "MENTOR",
       "display_name": "Balázs Kovács",
-      "organization": 7,
+      "organization": "Network Infrastructure",
       "is_submitted": false,
       "created_at": "2026-01-30T10:00:00Z",
       "updated_at": "2026-01-30T10:00:00Z"
@@ -141,7 +120,7 @@
       "user": 102,
       "role_in_cohort": "MENTOR",
       "display_name": "Erik Lindqvist",
-      "organization": 1,
+      "organization": "Cloud & Edge Solutions",
       "is_submitted": false,
       "created_at": "2026-01-30T10:00:00Z",
       "updated_at": "2026-01-30T10:00:00Z"
@@ -155,7 +134,7 @@
       "user": 103,
       "role_in_cohort": "MENTOR",
       "display_name": "Priya Sharma",
-      "organization": 6,
+      "organization": "Mobile Networks",
       "is_submitted": false,
       "created_at": "2026-01-30T10:00:00Z",
       "updated_at": "2026-01-30T10:00:00Z"
@@ -169,7 +148,7 @@
       "user": 104,
       "role_in_cohort": "MENTEE",
       "display_name": "Eszter Tóth",
-      "organization": 1,
+      "organization": "Cloud & Edge Solutions",
       "is_submitted": false,
       "created_at": "2026-01-30T10:00:00Z",
       "updated_at": "2026-01-30T10:00:00Z"
@@ -183,7 +162,7 @@
       "user": 105,
       "role_in_cohort": "MENTEE",
       "display_name": "Astrid Bergström",
-      "organization": 6,
+      "organization": "Mobile Networks",
       "is_submitted": false,
       "created_at": "2026-01-30T10:00:00Z",
       "updated_at": "2026-01-30T10:00:00Z"
@@ -197,7 +176,7 @@
       "user": 106,
       "role_in_cohort": "MENTEE",
       "display_name": "Kenji Tanaka",
-      "organization": 7,
+      "organization": "Network Infrastructure",
       "is_submitted": false,
       "created_at": "2026-01-30T10:00:00Z",
       "updated_at": "2026-01-30T10:00:00Z"

@@ -27,18 +27,6 @@ class Cohort(models.Model):
         verbose_name_plural = "Cohorts"
 
 
-class Organization(models.Model):
-    """An organization managed via Django admin."""
-
-    name = models.CharField(max_length=200, unique=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["name"]
-
-
 class Participant(models.Model):
     """A user participating in a cohort as either mentor or mentee."""
 
@@ -51,9 +39,7 @@ class Participant(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role_in_cohort = models.CharField(max_length=10, choices=ROLE_CHOICES)
     display_name = models.CharField(max_length=200)
-    organization = models.ForeignKey(
-        Organization, on_delete=models.PROTECT, null=True, blank=True
-    )
+    organization = models.CharField(max_length=200, blank=True, default="")
     is_submitted = models.BooleanField(default=False)
     submitted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -12,48 +12,6 @@
     }
   },
   {
-    "model": "core.organization",
-    "pk": 1,
-    "fields": {
-      "name": "Cloud & Edge Solutions"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 3,
-    "fields": {
-      "name": "Enterprise Solutions"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 5,
-    "fields": {
-      "name": "IP & Optical"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 6,
-    "fields": {
-      "name": "Mobile Networks"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 7,
-    "fields": {
-      "name": "Network Infrastructure"
-    }
-  },
-  {
-    "model": "core.organization",
-    "pk": 8,
-    "fields": {
-      "name": "Security Operations"
-    }
-  },
-  {
     "model": "auth.user",
     "pk": 21001,
     "fields": {
@@ -151,7 +109,7 @@
       "user": 21001,
       "role_in_cohort": "MENTOR",
       "display_name": "Péter Molnár",
-      "organization": 7,
+      "organization": "Network Infrastructure",
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:00:00Z",
       "created_at": "2026-02-01T09:00:00Z",
@@ -166,7 +124,7 @@
       "user": 21002,
       "role_in_cohort": "MENTOR",
       "display_name": "Axel Forsberg",
-      "organization": 1,
+      "organization": "Cloud & Edge Solutions",
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:00:00Z",
       "created_at": "2026-02-01T09:00:00Z",
@@ -181,7 +139,7 @@
       "user": 21003,
       "role_in_cohort": "MENTOR",
       "display_name": "Mei Zhang",
-      "organization": 6,
+      "organization": "Mobile Networks",
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:00:00Z",
       "created_at": "2026-02-01T09:00:00Z",
@@ -196,7 +154,7 @@
       "user": 21004,
       "role_in_cohort": "MENTEE",
       "display_name": "Réka Lakatos",
-      "organization": 5,
+      "organization": "IP & Optical",
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:00:00Z",
       "created_at": "2026-02-01T09:00:00Z",
@@ -211,7 +169,7 @@
       "user": 21005,
       "role_in_cohort": "MENTEE",
       "display_name": "Saga Hedlund",
-      "organization": 3,
+      "organization": "Enterprise Solutions",
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:00:00Z",
       "created_at": "2026-02-01T09:00:00Z",
@@ -226,7 +184,7 @@
       "user": 21006,
       "role_in_cohort": "MENTEE",
       "display_name": "Omar Farah",
-      "organization": 8,
+      "organization": "Security Operations",
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:00:00Z",
       "created_at": "2026-02-01T09:00:00Z",
