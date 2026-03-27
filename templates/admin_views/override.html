@@ -67,7 +67,7 @@
                                     <option value="">Select a mentor</option>
                                     {% for mentor in mentors %}
                                     <option value="{{ mentor.id }}" {% if selected_mentor|add:"0" == mentor.id %}selected{% endif %}>
-                                        {{ mentor.display_name }} ({{ mentor.organization }})
+                                        {{ mentor.display_name }} ({{ mentor.organization_name }})
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -80,7 +80,7 @@
                                     <option value="">Select a mentee</option>
                                     {% for mentee in mentees %}
                                     <option value="{{ mentee.id }}" {% if selected_mentee|add:"0" == mentee.id %}selected{% endif %}>
-                                        {{ mentee.display_name }} ({{ mentee.organization }})
+                                        {{ mentee.display_name }} ({{ mentee.organization_name }})
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -124,9 +124,9 @@
                             {% for match in matches %}
                             <tr class="{% if match.is_manual_override %}table-info{% endif %} {% if match.exception_flag %}table-danger{% endif %}">
                                 <td>{{ match.mentor.display_name }}</td>
-                                <td>{{ match.mentor.organization }}</td>
+                                <td>{{ match.mentor.organization_name }}</td>
                                 <td>{{ match.mentee.display_name }}</td>
-                                <td>{{ match.mentee.organization }}</td>
+                                <td>{{ match.mentee.organization_name }}</td>
                                 <td>{{ match.score_percent }}%</td>
                                 <td>
                                     {% if match.is_manual_override %}

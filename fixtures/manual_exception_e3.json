@@ -70,6 +70,15 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1007,
+    "fields": {
+      "name": "Fixed Access",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
     "model": "core.participant",
     "pk": 20031,
     "fields": {
@@ -77,7 +86,7 @@
       "user": 22001,
       "role_in_cohort": "MENTOR",
       "display_name": "Zoltán Fekete",
-      "organization": "Fixed Access",
+      "organization": 1007,
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:10:00Z",
       "created_at": "2026-02-01T09:10:00Z",
@@ -92,7 +101,7 @@
       "user": 22002,
       "role_in_cohort": "MENTOR",
       "display_name": "Freja Nilsson",
-      "organization": "Fixed Access",
+      "organization": 1007,
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:10:00Z",
       "created_at": "2026-02-01T09:10:00Z",
@@ -107,7 +116,7 @@
       "user": 22003,
       "role_in_cohort": "MENTEE",
       "display_name": "Bence Papp",
-      "organization": "Fixed Access",
+      "organization": 1007,
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:10:00Z",
       "created_at": "2026-02-01T09:10:00Z",
@@ -122,7 +131,7 @@
       "user": 22004,
       "role_in_cohort": "MENTEE",
       "display_name": "Ebba Gustafsson",
-      "organization": "Fixed Access",
+      "organization": 1007,
       "is_submitted": true,
       "submitted_at": "2026-02-01T10:10:00Z",
       "created_at": "2026-02-01T09:10:00Z",

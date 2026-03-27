@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import MenteeProfile
 
 
@@ -19,6 +19,9 @@ class AdminViewsTest(TestCase):
             "regular", "regular@example.com", "regularpass"
         )
 
+        # Create organization
+        self.org = Organization.objects.create(name="Test Org")
+
         # Create cohort
         self.cohort = Cohort.objects.create(name="Test Cohort")
 
@@ -28,7 +31,7 @@ class AdminViewsTest(TestCase):
             user=self.regular_user,
             role_in_cohort="MENTOR",
             display_name="Test Mentor",
-            organization="Test Org",
+            organization=self.org,
         )
 
         self.mentee_participant = Participant.objects.create(
@@ -36,7 +39,7 @@ class AdminViewsTest(TestCase):
             user=User.objects.create_user("mentee", "mentee@example.com", "mentee123"),
             role_in_cohort="MENTEE",
             display_name="Test Mentee",
-            organization="Test Org",
+            organization=self.org,
         )
 
         # Create clients

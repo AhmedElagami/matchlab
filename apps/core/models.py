@@ -27,6 +27,20 @@ class Cohort(models.Model):
         verbose_name_plural = "Cohorts"
 
 
+class Organization(models.Model):
+    """An admin-managed organization that participants can belong to."""
+
+    name = models.CharField(max_length=200, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class Participant(models.Model):
     """A user participating in a cohort as either mentor or mentee."""
 
@@ -39,7 +53,13 @@ class Participant(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role_in_cohort = models.CharField(max_length=10, choices=ROLE_CHOICES)
     display_name = models.CharField(max_length=200)
-    organization = models.CharField(max_length=200, blank=True, default="")
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="participants",
+    )
     is_submitted = models.BooleanField(default=False)
     submitted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -51,6 +71,10 @@ class Participant(models.Model):
             models.Index(fields=["cohort", "role_in_cohort"]),
         ]
         verbose_name_plural = "Participants"
+
+    @property
+    def organization_name(self):
+        return self.organization.name if self.organization else ""
 
     def __str__(self):
         return f"{self.display_name} ({self.role_in_cohort}) - {self.cohort.name}"

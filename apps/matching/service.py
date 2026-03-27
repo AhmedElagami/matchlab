@@ -217,12 +217,13 @@ def _get_input_signature(cohort: Cohort) -> str:
     This helps detect if inputs have changed between runs.
     """
     # Get all relevant data that affects matching
-    participants = Participant.objects.filter(cohort=cohort).order_by("id")
+    participants = Participant.objects.filter(cohort=cohort).select_related("organization").order_by("id")
     data_parts = []
 
     for participant in participants:
+        org_name = participant.organization.name if participant.organization else ""
         data_parts.append(
-            f"{participant.id}:{participant.role_in_cohort}:{participant.organization}"
+            f"{participant.id}:{participant.role_in_cohort}:{org_name}"
         )
 
         # Add preferences
@@ -251,7 +252,10 @@ def get_match_run_results(match_run: MatchRun) -> List[Dict[str, Any]]:
     if match_run.status != "SUCCESS":
         return []
 
-    matches = match_run.matches.select_related("mentor", "mentee").all()
+    matches = match_run.matches.select_related(
+        "mentor", "mentee",
+        "mentor__organization", "mentee__organization",
+    ).all()
 
     results = []
     for match in matches:
@@ -259,10 +263,10 @@ def get_match_run_results(match_run: MatchRun) -> List[Dict[str, Any]]:
             {
                 "mentor_name": match.mentor.display_name,
                 "mentor_email": match.mentor.user.email,
-                "mentor_org": str(match.mentor.organization or ""),
+                "mentor_org": match.mentor.organization.name if match.mentor.organization else "",
                 "mentee_name": match.mentee.display_name,
                 "mentee_email": match.mentee.user.email,
-                "mentee_org": str(match.mentee.organization or ""),
+                "mentee_org": match.mentee.organization.name if match.mentee.organization else "",
                 "match_percent": match.score_percent,
                 "ambiguity_flag": match.ambiguity_flag,
                 "ambiguity_reason": match.ambiguity_reason,

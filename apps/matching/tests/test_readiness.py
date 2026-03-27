@@ -1,7 +1,7 @@
 """Tests for the readiness module."""
 
 from django.test import TestCase
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference
 from apps.matching.readiness import (
     check_counts_mismatch,
@@ -22,6 +22,12 @@ class ReadinessTest(TestCase):
         self.cohort = Cohort.objects.create(
             name="Test Cohort", status="OPEN", cohort_config={"min_options_strict": 2}
         )
+
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
+        self.org_c = Organization.objects.create(name="OrgC")
+        org_list = [self.org_a, self.org_b, self.org_c]
 
         # Create users
         self.mentor_users = []
@@ -46,15 +52,13 @@ class ReadinessTest(TestCase):
         self.mentors = []
         self.mentees = []
 
-        orgs = ["OrgA", "OrgB", "OrgC"]
-
         for i, user in enumerate(self.mentor_users):
             mentor = Participant.objects.create(
                 cohort=self.cohort,
                 user=user,
                 role_in_cohort="MENTOR",
                 display_name=f"Test Mentor {i}",
-                organization=orgs[i],
+                organization=org_list[i],
                 is_submitted=True,
             )
             self.mentors.append(mentor)
@@ -65,7 +69,7 @@ class ReadinessTest(TestCase):
                 user=user,
                 role_in_cohort="MENTEE",
                 display_name=f"Test Mentee {i}",
-                organization=orgs[
+                organization=org_list[
                     (i + 1) % 3
                 ],  # Different org than corresponding mentor
                 is_submitted=True,
@@ -86,8 +90,8 @@ class ReadinessTest(TestCase):
 
     def test_check_missing_org_with_missing(self):
         """Test missing org check when some participants are missing organizations."""
-        # Remove organization from one participant
-        self.mentors[0].organization = ""
+        # Remove organization from one participant (set to NULL)
+        self.mentors[0].organization = None
         self.mentors[0].save()
 
         is_ready, message = check_missing_org(self.cohort)
@@ -115,8 +119,8 @@ class ReadinessTest(TestCase):
         # Create mutual preferences between all cross-org pairs
         for mentor in self.mentors:
             for mentee in self.mentees:
-                # Skip same-org pairs
-                if mentor.organization != mentee.organization:
+                # Skip same-org pairs (compare FK IDs)
+                if mentor.organization_id != mentee.organization_id:
                     Preference.objects.create(
                         from_participant=mentor, to_participant=mentee, rank=1
                     )
@@ -133,7 +137,7 @@ class ReadinessTest(TestCase):
         # Setup data for all checks to pass
         for mentor in self.mentors:
             for mentee in self.mentees:
-                if mentor.organization != mentee.organization:
+                if mentor.organization_id != mentee.organization_id:
                     Preference.objects.create(
                         from_participant=mentor, to_participant=mentee, rank=1
                     )

@@ -3,7 +3,7 @@
 import pytest
 from django.test import TestCase
 from django.contrib.auth.models import User
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference, PairScore, MatchRun, Match
 from apps.matching.data_prep import PreparedInputs, prepare_inputs
 from apps.matching.solvers.strict import solve_strict
@@ -19,6 +19,10 @@ class SolverTest(TestCase):
         """Set up test data."""
         # Create cohort
         self.cohort = Cohort.objects.create(name="Test Cohort", status="OPEN")
+
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
 
         # Create users
         self.mentor1_user = User.objects.create_user(
@@ -40,7 +44,7 @@ class SolverTest(TestCase):
             user=self.mentor1_user,
             role_in_cohort="MENTOR",
             display_name="M1",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
         self.mentor2 = Participant.objects.create(
@@ -48,7 +52,7 @@ class SolverTest(TestCase):
             user=self.mentor2_user,
             role_in_cohort="MENTOR",
             display_name="M2",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
         self.mentee1 = Participant.objects.create(
@@ -56,7 +60,7 @@ class SolverTest(TestCase):
             user=self.mentee1_user,
             role_in_cohort="MENTEE",
             display_name="T1",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
         self.mentee2 = Participant.objects.create(
@@ -64,7 +68,7 @@ class SolverTest(TestCase):
             user=self.mentee2_user,
             role_in_cohort="MENTEE",
             display_name="T2",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
 
@@ -211,6 +215,10 @@ class ServiceTest(TestCase):
             username="admin", email="admin@example.com", password="adminpass123"
         )
 
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
+
         # Create users
         self.mentor1_user = User.objects.create_user(
             username="mentor1", email="mentor1@example.com", password="testpass123"
@@ -231,7 +239,7 @@ class ServiceTest(TestCase):
             user=self.mentor1_user,
             role_in_cohort="MENTOR",
             display_name="M1",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
         self.mentor2 = Participant.objects.create(
@@ -239,7 +247,7 @@ class ServiceTest(TestCase):
             user=self.mentor2_user,
             role_in_cohort="MENTOR",
             display_name="M2",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
         self.mentee1 = Participant.objects.create(
@@ -247,7 +255,7 @@ class ServiceTest(TestCase):
             user=self.mentee1_user,
             role_in_cohort="MENTEE",
             display_name="T1",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
         self.mentee2 = Participant.objects.create(
@@ -255,7 +263,7 @@ class ServiceTest(TestCase):
             user=self.mentee2_user,
             role_in_cohort="MENTEE",
             display_name="T2",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
 
@@ -300,9 +308,11 @@ class ServiceTest(TestCase):
         match2 = matches.get(mentor=self.mentor2)
 
         self.assertEqual(match1.mentee, self.mentee1)
-        self.assertGreaterEqual(match1.score_percent, 85)
+        # Scores are recalculated by compute_all_pair_scores during run_matching
+        # With single mutual preferences (rank 1 of max 1), score = 100%
+        self.assertEqual(match1.score_percent, 100)
         self.assertEqual(match2.mentee, self.mentee2)
-        self.assertGreaterEqual(match2.score_percent, 85)
+        self.assertEqual(match2.score_percent, 100)
 
         # Check that objective summary is populated
         self.assertIn("match_count", match_run.objective_summary)

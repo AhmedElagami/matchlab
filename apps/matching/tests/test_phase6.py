@@ -3,7 +3,7 @@
 import unittest
 from django.test import TestCase
 from django.contrib.auth.models import User
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference, MatchRun, Match
 from apps.matching.data_prep import prepare_inputs
 from apps.matching.service import run_matching
@@ -28,14 +28,18 @@ class Phase6TestCase(TestCase):
             is_staff=True,
         )
 
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
+
         # Create participants for 3x3 strict infeasible scenario
         self.users_data = [
-            ("m1", "M1", "m1@test.com", "OrgA", "MENTOR"),
-            ("m2", "M2", "m2@test.com", "OrgA", "MENTOR"),
-            ("m3", "M3", "m3@test.com", "OrgB", "MENTOR"),
-            ("t1", "T1", "t1@test.com", "OrgA", "MENTEE"),
-            ("t2", "T2", "t2@test.com", "OrgB", "MENTEE"),
-            ("t3", "T3", "t3@test.com", "OrgB", "MENTEE"),
+            ("m1", "M1", "m1@test.com", self.org_a, "MENTOR"),
+            ("m2", "M2", "m2@test.com", self.org_a, "MENTOR"),
+            ("m3", "M3", "m3@test.com", self.org_b, "MENTOR"),
+            ("t1", "T1", "t1@test.com", self.org_a, "MENTEE"),
+            ("t2", "T2", "t2@test.com", self.org_b, "MENTEE"),
+            ("t3", "T3", "t3@test.com", self.org_b, "MENTEE"),
         ]
 
         self.participants = {}

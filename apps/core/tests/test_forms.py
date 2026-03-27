@@ -1,6 +1,6 @@
 from django.test import TestCase
 from ..forms import ParticipantProfileForm
-from ..models import Cohort, Participant
+from ..models import Cohort, Organization, Participant
 from django.contrib.auth.models import User
 
 
@@ -10,9 +10,10 @@ class ParticipantProfileFormTest(TestCase):
             username="testuser", email="test@example.com", password="testpass123"
         )
         self.cohort = Cohort.objects.create(name="TDP 2026", status="OPEN")
+        self.org = Organization.objects.create(name="Test Organization")
 
     def test_form_valid_with_complete_data(self):
-        form_data = {"display_name": "Test User", "organization": "Test Organization"}
+        form_data = {"display_name": "Test User", "organization": self.org.pk}
         form = ParticipantProfileForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -29,7 +30,7 @@ class ParticipantProfileFormTest(TestCase):
     def test_form_invalid_without_display_name(self):
         form_data = {
             "display_name": "",  # Empty display name
-            "organization": "Test Organization",
+            "organization": self.org.pk,
         }
         form = ParticipantProfileForm(data=form_data)
         self.assertFalse(form.is_valid())

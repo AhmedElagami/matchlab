@@ -183,12 +183,12 @@
                                 data-exception="{{ match.exception_flag|yesno:'true,false' }}"
                                 data-mentor-name="{{ match.mentor.display_name|lower }}"
                                 data-mentee-name="{{ match.mentee.display_name|lower }}"
-                                data-mentor-org="{{ match.mentor.organization|lower }}"
-                                data-mentee-org="{{ match.mentee.organization|lower }}">
+                                data-mentor-org="{{ match.mentor.organization_name|lower }}"
+                                data-mentee-org="{{ match.mentee.organization_name|lower }}">
                                 <td>{{ match.mentor.display_name }}</td>
-                                <td>{{ match.mentor.organization }}</td>
+                                <td>{{ match.mentor.organization_name }}</td>
                                 <td>{{ match.mentee.display_name }}</td>
-                                <td>{{ match.mentee.organization }}</td>
+                                <td>{{ match.mentee.organization_name }}</td>
                                 <td>{{ match.score_percent }}%</td>
                                 <td>
                                     {% if match.ambiguity_flag %}

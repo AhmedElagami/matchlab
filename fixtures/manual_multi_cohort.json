@@ -35,6 +35,15 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1008,
+    "fields": {
+      "name": "Digital Automation",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
     "model": "core.participant",
     "pk": 20051,
     "fields": {
@@ -42,7 +51,7 @@
       "user": 23001,
       "role_in_cohort": "MENTOR",
       "display_name": "Ádám Szilágyi",
-      "organization": "Digital Automation",
+      "organization": 1008,
       "is_submitted": false,
       "created_at": "2026-02-01T09:20:00Z",
       "updated_at": "2026-02-01T09:20:00Z"
@@ -56,7 +65,7 @@
       "user": 23001,
       "role_in_cohort": "MENTOR",
       "display_name": "Ádám Szilágyi",
-      "organization": "Digital Automation",
+      "organization": 1008,
       "is_submitted": false,
       "created_at": "2026-02-01T09:20:00Z",
       "updated_at": "2026-02-01T09:20:00Z"

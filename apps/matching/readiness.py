@@ -159,7 +159,7 @@ def check_readiness(cohort: Cohort) -> Dict[str, Any]:
 
 def get_zero_option_participants(cohort: Cohort) -> List[Dict[str, Any]]:
     """Get participants with zero mutual cross-org options."""
-    participants = Participant.objects.filter(cohort=cohort)
+    participants = Participant.objects.filter(cohort=cohort).select_related("organization")
     zero_option_participants = []
 
     for participant in participants:
@@ -201,7 +201,7 @@ def get_zero_option_participants(cohort: Cohort) -> List[Dict[str, Any]]:
                     "participant": participant,
                     "display_name": participant.display_name,
                     "role": participant.role_in_cohort,
-                    "organization": participant.organization,
+                    "organization": participant.organization.name if participant.organization else "",
                     "mutual_count": mutual_count,
                 }
             )
@@ -213,7 +213,7 @@ def get_lowest_option_participants(
     cohort: Cohort, limit: int = 5
 ) -> List[Dict[str, Any]]:
     """Get participants with the lowest mutual cross-org option counts."""
-    participants = Participant.objects.filter(cohort=cohort)
+    participants = Participant.objects.filter(cohort=cohort).select_related("organization")
     option_counts = []
 
     for participant in participants:
@@ -254,7 +254,7 @@ def get_lowest_option_participants(
                 "participant": participant,
                 "display_name": participant.display_name,
                 "role": participant.role_in_cohort,
-                "organization": participant.organization,
+                "organization": participant.organization.name if participant.organization else "",
                 "mutual_count": mutual_count,
             }
         )
@@ -269,9 +269,11 @@ def get_org_distribution(cohort: Cohort) -> Dict[str, Dict[str, int]]:
     # Count mentors and mentees by organization
     org_stats = {}
 
-    participants = Participant.objects.filter(cohort=cohort)
+    participants = Participant.objects.filter(cohort=cohort).select_related(
+        "organization"
+    )
     for participant in participants:
-        org = str(participant.organization) if participant.organization else "No Organization"
+        org = participant.organization.name if participant.organization else "No Organization"
         role = participant.role_in_cohort
 
         if org not in org_stats:

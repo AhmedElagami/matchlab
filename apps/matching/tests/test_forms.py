@@ -1,5 +1,5 @@
 from django.test import TestCase
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference
 from apps.matching.forms import PreferencesForm
 from django.contrib.auth.models import User
@@ -9,6 +9,11 @@ class PreferencesFormTest(TestCase):
     def setUp(self):
         # Create a cohort
         self.cohort = Cohort.objects.create(name="Test Cohort", status="OPEN")
+
+        # Create organizations
+        self.org1 = Organization.objects.create(name="Test Org")
+        self.org2 = Organization.objects.create(name="Different Org")
+        self.org3 = Organization.objects.create(name="Another Org")
 
         # Create users
         self.mentor_user = User.objects.create_user(
@@ -29,7 +34,7 @@ class PreferencesFormTest(TestCase):
             user=self.mentor_user,
             role_in_cohort="MENTOR",
             display_name="Test Mentor",
-            organization="Test Org",
+            organization=self.org1,
         )
 
         self.mentee1 = Participant.objects.create(
@@ -37,7 +42,7 @@ class PreferencesFormTest(TestCase):
             user=self.mentee1_user,
             role_in_cohort="MENTEE",
             display_name="Test Mentee 1",
-            organization="Different Org",
+            organization=self.org2,
         )
 
         self.mentee2 = Participant.objects.create(
@@ -45,7 +50,7 @@ class PreferencesFormTest(TestCase):
             user=self.mentee2_user,
             role_in_cohort="MENTEE",
             display_name="Test Mentee 2",
-            organization="Another Org",
+            organization=self.org3,
         )
 
         self.candidates = [self.mentee1, self.mentee2]
