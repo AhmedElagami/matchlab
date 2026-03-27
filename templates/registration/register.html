@@ -93,8 +93,13 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="{{ form.role.id_for_label }}" class="form-label">I want to be a:</label>
-                        {{ form.role }}
+                        <label class="form-label d-block">I want to be a:</label>
+                        {% for radio in form.role %}
+                            <div class="form-check">
+                                {{ radio.tag }}
+                                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                            </div>
+                        {% endfor %}
                         {% if form.role.errors %}
                             <div class="text-danger">
                                 {% for error in form.role.errors %}
@@ -104,7 +109,7 @@
                         {% endif %}
                     </div>
                     
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                    <button type="submit" class="btn btn-primary w-100" data-testid="register-button">Register</button>
                 </form>
                 
                 <div class="text-center mt-3">
