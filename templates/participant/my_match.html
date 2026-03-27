@@ -30,26 +30,8 @@
                 </div>
                 
                 <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="alert alert-primary">
-                            <h6>Match Percentage</h6>
-                            <p class="display-6">{{ match.score_percent }}%</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="alert {% if match.is_manual_override %}alert-warning{% else %}alert-success{% endif %}">
-                            <h6>Match Type</h6>
-                            <p>
-                                {% if match.is_manual_override %}
-                                    <span class="badge bg-warning">Manual Override</span>
-                                {% else %}
-                                    <span class="badge bg-success">Algorithm</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="alert {% if match.exception_flag %}alert-danger{% else %}alert-success{% endif %}">
                             <h6>Policy Compliance</h6>
                             <p>
                                 {% if match.exception_flag %}
@@ -62,13 +44,6 @@
                         </div>
                     </div>
                 </div>
-                
-                {% if match.is_manual_override and match.override_reason %}
-                <div class="alert alert-info">
-                    <h6>Override Reason</h6>
-                    <p>{{ match.override_reason }}</p>
-                </div>
-                {% endif %}
             </div>
         </div>
         {% else %}
