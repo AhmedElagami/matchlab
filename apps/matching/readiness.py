@@ -40,7 +40,7 @@ def check_counts_mismatch(cohort: Cohort) -> Tuple[bool, str]:
 def check_missing_org(cohort: Cohort) -> Tuple[bool, str]:
     """Check if any participants are missing organization."""
     missing_org_count = Participant.objects.filter(
-        cohort=cohort, organization=""
+        cohort=cohort, organization__isnull=True
     ).count()
 
     if missing_org_count > 0:
