@@ -27,12 +27,24 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='Organization',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=200, unique=True)),
+                ('is_active', models.BooleanField(default=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+                'ordering': ['name'],
+            },
+        ),
+        migrations.CreateModel(
             name='Participant',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('role_in_cohort', models.CharField(choices=[('MENTOR', 'Mentor'), ('MENTEE', 'Mentee')], max_length=10)),
                 ('display_name', models.CharField(max_length=200)),
-                ('organization', models.CharField(blank=True, max_length=200)),
+                ('organization', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='participants', to='core.organization')),
                 ('is_submitted', models.BooleanField(default=False)),
                 ('submitted_at', models.DateTimeField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
