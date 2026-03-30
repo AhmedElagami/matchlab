@@ -1,5 +1,5 @@
 from django.test import TestCase
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference
 from django.contrib.auth.models import User
 
@@ -8,6 +8,7 @@ class PreferenceModelTest(TestCase):
     def setUp(self):
         # Create a cohort
         self.cohort = Cohort.objects.create(name="Test Cohort", status="OPEN")
+        self.org = Organization.objects.create(name="Test Org")
 
         # Create users
         self.mentor_user = User.objects.create_user(
@@ -24,7 +25,7 @@ class PreferenceModelTest(TestCase):
             user=self.mentor_user,
             role_in_cohort="MENTOR",
             display_name="Test Mentor",
-            organization="Test Org",
+            organization=self.org,
         )
 
         self.mentee = Participant.objects.create(
@@ -32,7 +33,7 @@ class PreferenceModelTest(TestCase):
             user=self.mentee_user,
             role_in_cohort="MENTEE",
             display_name="Test Mentee",
-            organization="Test Org",
+            organization=self.org,
         )
 
     def test_preference_creation(self):

@@ -93,7 +93,7 @@
                                         <i class="bi bi-grip-vertical text-muted"></i>
                                     </td>
                                     <td>{{ candidate.display_name }}</td>
-                                    <td>{{ candidate.organization }}</td>
+                                    <td>{{ candidate.organization_name }}</td>
                                     <td class="rank-display">
                                         {% if form.initial|get_item:'candidate_'|get_item:candidate.id %}
                                             #{{ form.initial|get_item:'candidate_'|get_item:candidate.id }}
@@ -112,7 +112,7 @@
                                 <tr class="table-light">
                                     <td><i class="bi bi-x-circle text-muted"></i></td>
                                     <td>{{ candidate.display_name }}</td>
-                                    <td>{{ candidate.organization }}</td>
+                                    <td>{{ candidate.organization_name }}</td>
                                     <td>
                                         <small class="text-muted">Blocked (same organization)</small>
                                     </td>

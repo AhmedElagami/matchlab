@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cohort, Participant
+from .models import Cohort, Organization, Participant
 
 
 @admin.register(Cohort)
@@ -8,6 +8,14 @@ class CohortAdmin(admin.ModelAdmin):
     list_filter = ("status", "created_at")
     search_fields = ("name",)
     ordering = ("-created_at",)
+
+
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ("name", "is_active", "created_at")
+    list_filter = ("is_active",)
+    search_fields = ("name",)
+    ordering = ("name",)
 
 
 @admin.register(Participant)

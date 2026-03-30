@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
-from ..models import Cohort, Participant
+from ..models import Cohort, Organization, Participant
 
 
 class ViewsTest(TestCase):
@@ -14,12 +14,13 @@ class ViewsTest(TestCase):
             username="admin", email="admin@example.com", password="adminpass123"
         )
         self.cohort = Cohort.objects.create(name="TDP 2026", status="OPEN")
+        self.org = Organization.objects.create(name="Test Org")
         self.participant = Participant.objects.create(
             cohort=self.cohort,
             user=self.user,
             role_in_cohort="MENTOR",
             display_name="Test User",
-            organization="Test Org",
+            organization=self.org,
         )
 
     def test_home_view_redirects_anonymous_user_to_login(self):

@@ -2,7 +2,7 @@
 
 from django.test import TestCase, Client
 from django.urls import reverse
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference
 from django.contrib.auth.models import User
 
@@ -18,6 +18,10 @@ class CohortDashboardTest(TestCase):
         self.regular_user = User.objects.create_user(
             username="regular", email="regular@example.com", password="userpass123"
         )
+
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
 
         # Create a cohort
         self.cohort = Cohort.objects.create(
@@ -39,7 +43,7 @@ class CohortDashboardTest(TestCase):
             user=self.mentor_user,
             role_in_cohort="MENTOR",
             display_name="Test Mentor",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
 
@@ -48,7 +52,7 @@ class CohortDashboardTest(TestCase):
             user=self.mentee_user,
             role_in_cohort="MENTEE",
             display_name="Test Mentee",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
 

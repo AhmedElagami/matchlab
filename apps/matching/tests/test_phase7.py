@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 from django.contrib.auth.models import User
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference, MatchRun, Match, ActiveMatchRun
 from apps.matching.service import run_matching
 from apps.matching import override
@@ -24,14 +24,18 @@ class Phase7TestCase(TestCase):
             is_staff=True,
         )
 
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
+
         # Create participants for 3x3 scenario (using same structure as phase 6 tests)
         self.users_data = [
-            ("m1", "M1", "m1@test.com", "OrgA", "MENTOR"),
-            ("m2", "M2", "m2@test.com", "OrgA", "MENTOR"),
-            ("m3", "M3", "m3@test.com", "OrgB", "MENTOR"),
-            ("t1", "T1", "t1@test.com", "OrgA", "MENTEE"),
-            ("t2", "T2", "t2@test.com", "OrgB", "MENTEE"),
-            ("t3", "T3", "t3@test.com", "OrgB", "MENTEE"),
+            ("m1", "M1", "m1@test.com", self.org_a, "MENTOR"),
+            ("m2", "M2", "m2@test.com", self.org_a, "MENTOR"),
+            ("m3", "M3", "m3@test.com", self.org_b, "MENTOR"),
+            ("t1", "T1", "t1@test.com", self.org_a, "MENTEE"),
+            ("t2", "T2", "t2@test.com", self.org_b, "MENTEE"),
+            ("t3", "T3", "t3@test.com", self.org_b, "MENTEE"),
         ]
 
         self.participants = {}
@@ -111,6 +115,7 @@ class Phase7TestCase(TestCase):
         """Test validation fails with participants from different cohorts."""
         # Create a different cohort
         other_cohort = Cohort.objects.create(name="Other Cohort")
+        org_c = Organization.objects.create(name="OrgC")
         other_user = User.objects.create_user(
             username="other_mentor",
             email="other_mentor@test.com",
@@ -121,7 +126,7 @@ class Phase7TestCase(TestCase):
             cohort=other_cohort,
             display_name="Other Mentor",
             role_in_cohort="MENTOR",
-            organization="OrgC",
+            organization=org_c,
             is_submitted=True,
         )
 
@@ -134,6 +139,7 @@ class Phase7TestCase(TestCase):
     def test_create_manual_override_success(self):
         """Test successful creation of manual override."""
         # Create another mentee
+        org_c = Organization.objects.get_or_create(name="OrgC")[0]
         other_mentee_user = User.objects.create_user(
             username="mentee2",
             email="mentee2@test.com",
@@ -144,7 +150,7 @@ class Phase7TestCase(TestCase):
             cohort=self.cohort,
             display_name="Other Mentee",
             role_in_cohort="MENTEE",
-            organization="OrgC",
+            organization=org_c,
             is_submitted=True,
         )
 
@@ -176,7 +182,7 @@ class Phase7TestCase(TestCase):
             cohort=self.cohort,
             display_name="Same Org Mentee",
             role_in_cohort="MENTEE",
-            organization="OrgA",  # Same as mentor
+            organization=self.org_a,  # Same as mentor
             is_submitted=True,
         )
 

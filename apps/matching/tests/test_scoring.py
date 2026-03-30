@@ -1,8 +1,8 @@
 """Tests for the scoring module."""
 
 from django.test import TestCase
-from apps.core.models import Cohort, Participant
-from apps.matching.models import Preference
+from apps.core.models import Cohort, Organization, Participant
+from apps.matching.models import Preference, MentorProfile, MenteeProfile
 from apps.matching.scoring import (
     compute_rank_score,
     compute_pair_score,
@@ -17,6 +17,11 @@ class ScoringTest(TestCase):
             status="OPEN",
         )
 
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
+
+        # Create users
         self.mentor_user = User.objects.create_user(
             username="mentor", email="mentor@example.com", password="testpass123"
         )
@@ -29,21 +34,29 @@ class ScoringTest(TestCase):
             user=self.mentor_user,
             role_in_cohort="MENTOR",
             display_name="Test Mentor",
-            organization="OrgA",
+            organization=self.org_a,
         )
         self.mentee = Participant.objects.create(
             cohort=self.cohort,
             user=self.mentee_user,
             role_in_cohort="MENTEE",
             display_name="Test Mentee",
-            organization="OrgB",
+            organization=self.org_b,
         )
 
     def test_compute_rank_score(self):
         """Test rank score computation."""
-        self.assertEqual(compute_rank_score(1, 5), 100.0)
-        self.assertEqual(compute_rank_score(3, 5), 50.0)
-        self.assertEqual(compute_rank_score(5, 5), 0.0)
+        # Rank 1 out of 5 should be 100%
+        score = compute_rank_score(1, 5)
+        self.assertEqual(score, 100.0)
+
+        # Rank 3 out of 5: (1 - (3-1)/(5-1)) * 100 = 50%
+        score = compute_rank_score(3, 5)
+        self.assertEqual(score, 50.0)
+
+        # Rank 5 out of 5: (1 - (5-1)/(5-1)) * 100 = 0%
+        score = compute_rank_score(5, 5)
+        self.assertEqual(score, 0.0)
 
         # Edge cases
         self.assertEqual(compute_rank_score(0, 5), 0.0)
@@ -64,6 +77,8 @@ class ScoringTest(TestCase):
             from_participant=self.mentee, to_participant=self.mentor, rank=2
         )
 
+        # Add more preferences to establish max ranks
+        org_c = Organization.objects.create(name="OrgC")
         other_mentee = Participant.objects.create(
             cohort=self.cohort,
             user=User.objects.create_user(
@@ -71,7 +86,7 @@ class ScoringTest(TestCase):
             ),
             role_in_cohort="MENTEE",
             display_name="Other Mentee",
-            organization="OrgC",
+            organization=org_c,
         )
         Preference.objects.create(
             from_participant=self.mentor, to_participant=other_mentee, rank=2
@@ -82,4 +97,8 @@ class ScoringTest(TestCase):
 
         score, breakdown = compute_pair_score(self.mentor, self.mentee, self.cohort)
         self.assertGreater(score, 0.0)
+
+        # Check breakdown structure
+        self.assertIn("mentor_rank_score", breakdown)
+        self.assertIn("mentee_rank_score", breakdown)
         self.assertIn("overall_score", breakdown)

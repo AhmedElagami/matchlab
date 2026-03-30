@@ -150,6 +150,13 @@ Important: This satisfies the operational requirement “always produce a match 
 * status: DRAFT | OPEN | CLOSED | MATCHED
 * created_at
 
+**organizations**
+
+* id
+* name (unique)
+* is_active (bool, default true)
+* created_at
+
 **participants**
 
 * id
@@ -157,7 +164,7 @@ Important: This satisfies the operational requirement “always produce a match 
 * user_id (FK users)
 * role_in_cohort: MENTOR | MENTEE
 * display_name
-* organization (string; optionally FK organizations)
+* organization_id (FK organizations, nullable; PROTECT on delete)
 * is_submitted (bool)
 * submitted_at (timestamp nullable)
 * created_at, updated_at
@@ -302,7 +309,7 @@ Admin dashboard includes:
 
   * request more preferences from X
   * request mentors to broaden acceptability
-  * correct organizations spelling
+  * verify organization assignments are correct
   * ensure both sides submitted
 
 ---

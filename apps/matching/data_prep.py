@@ -47,12 +47,12 @@ def prepare_inputs(cohort: Cohort) -> PreparedInputs:
     mentors = list(
         Participant.objects.filter(
             cohort=cohort, role_in_cohort="MENTOR", is_submitted=True
-        )
+        ).select_related("organization")
     )
     mentees = list(
         Participant.objects.filter(
             cohort=cohort, role_in_cohort="MENTEE", is_submitted=True
-        )
+        ).select_related("organization")
     )
 
     logger.info(f"Found {len(mentors)} mentors and {len(mentees)} mentees")
@@ -92,9 +92,20 @@ def _build_same_org_matrix(
 
     for mentor in mentors:
         for mentee in mentees:
-            same_org[(mentor.id, mentee.id)] = (
-                mentor.organization == mentee.organization
-            )
+            mentor_org_id = mentor.organization_id
+            mentee_org_id = mentee.organization_id
+
+            if mentor_org_id is None and mentee_org_id is None:
+                # Both NULL → same-org (preserves current behavior)
+                same_org[(mentor.id, mentee.id)] = True
+            elif mentor_org_id is None or mentee_org_id is None:
+                # One NULL, one not → different org
+                same_org[(mentor.id, mentee.id)] = False
+            else:
+                # Both non-NULL → compare FK IDs
+                same_org[(mentor.id, mentee.id)] = (
+                    mentor_org_id == mentee_org_id
+                )
 
     return same_org
 
@@ -105,9 +116,9 @@ def _build_participant_orgs(
     """Build lookup for participant organizations by ID."""
     orgs = {}
     for mentor in mentors:
-        orgs[mentor.id] = str(mentor.organization) if mentor.organization else ""
+        orgs[mentor.id] = mentor.organization.name if mentor.organization else ""
     for mentee in mentees:
-        orgs[mentee.id] = str(mentee.organization) if mentee.organization else ""
+        orgs[mentee.id] = mentee.organization.name if mentee.organization else ""
     return orgs
 
 
@@ -230,14 +241,14 @@ def prepare_incremental_inputs(cohort: Cohort, base_match_run) -> PreparedInputs
             cohort=cohort, 
             role_in_cohort="MENTOR", 
             is_submitted=True
-        ).exclude(id__in=matched_mentor_ids)
+        ).exclude(id__in=matched_mentor_ids).select_related("organization")
     )
     mentees = list(
         Participant.objects.filter(
             cohort=cohort, 
             role_in_cohort="MENTEE", 
             is_submitted=True
-        ).exclude(id__in=matched_mentee_ids)
+        ).exclude(id__in=matched_mentee_ids).select_related("organization")
     )
     
     logger.info(f"Found {len(mentors)} unmatched mentors and {len(mentees)} unmatched mentees")

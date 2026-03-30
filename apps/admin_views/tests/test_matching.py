@@ -1,10 +1,9 @@
 """Integration tests for admin matching views."""
 
-import pytest
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
-from apps.core.models import Cohort, Participant
+from apps.core.models import Cohort, Organization, Participant
 from apps.matching.models import Preference, PairScore
 
 
@@ -19,6 +18,10 @@ class AdminMatchingViewTest(TestCase):
         )
         self.client = Client()
         self.client.login(username="admin", password="adminpass123")
+
+        # Create organizations
+        self.org_a = Organization.objects.create(name="OrgA")
+        self.org_b = Organization.objects.create(name="OrgB")
 
         # Create cohort
         self.cohort = Cohort.objects.create(name="Test Cohort", status="OPEN")
@@ -43,7 +46,7 @@ class AdminMatchingViewTest(TestCase):
             user=self.mentor1_user,
             role_in_cohort="MENTOR",
             display_name="M1",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
         self.mentor2 = Participant.objects.create(
@@ -51,7 +54,7 @@ class AdminMatchingViewTest(TestCase):
             user=self.mentor2_user,
             role_in_cohort="MENTOR",
             display_name="M2",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
         self.mentee1 = Participant.objects.create(
@@ -59,7 +62,7 @@ class AdminMatchingViewTest(TestCase):
             user=self.mentee1_user,
             role_in_cohort="MENTEE",
             display_name="T1",
-            organization="OrgB",
+            organization=self.org_b,
             is_submitted=True,
         )
         self.mentee2 = Participant.objects.create(
@@ -67,7 +70,7 @@ class AdminMatchingViewTest(TestCase):
             user=self.mentee2_user,
             role_in_cohort="MENTEE",
             display_name="T2",
-            organization="OrgA",
+            organization=self.org_a,
             is_submitted=True,
         )
 

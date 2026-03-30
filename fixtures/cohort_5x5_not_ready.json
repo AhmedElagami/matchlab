@@ -162,6 +162,51 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1001,
+    "fields": {
+      "name": "Network Infrastructure",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1002,
+    "fields": {
+      "name": "Cloud & Edge Solutions",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1003,
+    "fields": {
+      "name": "Mobile Networks",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1004,
+    "fields": {
+      "name": "IP & Optical",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1005,
+    "fields": {
+      "name": "Enterprise Solutions",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
     "model": "core.participant",
     "pk": 21,
     "fields": {
@@ -169,7 +214,7 @@
       "user": 121,
       "role_in_cohort": "MENTOR",
       "display_name": "Gábor Varga",
-      "organization": "Network Infrastructure",
+      "organization": 1001,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -184,7 +229,7 @@
       "user": 122,
       "role_in_cohort": "MENTOR",
       "display_name": "Elsa Holm",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1002,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -199,7 +244,7 @@
       "user": 123,
       "role_in_cohort": "MENTOR",
       "display_name": "Chen Wei",
-      "organization": "Mobile Networks",
+      "organization": 1003,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -214,7 +259,7 @@
       "user": 124,
       "role_in_cohort": "MENTOR",
       "display_name": "Kata Balogh",
-      "organization": "IP & Optical",
+      "organization": 1004,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -229,7 +274,7 @@
       "user": 125,
       "role_in_cohort": "MENTOR",
       "display_name": "Magnus Lund",
-      "organization": "Enterprise Solutions",
+      "organization": 1005,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -244,7 +289,7 @@
       "user": 126,
       "role_in_cohort": "MENTEE",
       "display_name": "Dóra Szabó",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1002,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -259,7 +304,7 @@
       "user": 127,
       "role_in_cohort": "MENTEE",
       "display_name": "Björn Dahl",
-      "organization": "Mobile Networks",
+      "organization": 1003,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -274,7 +319,7 @@
       "user": 128,
       "role_in_cohort": "MENTEE",
       "display_name": "Aisha Hassan",
-      "organization": "IP & Optical",
+      "organization": 1004,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -289,7 +334,7 @@
       "user": 129,
       "role_in_cohort": "MENTEE",
       "display_name": "Tamás Kiss",
-      "organization": "Enterprise Solutions",
+      "organization": 1005,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -304,7 +349,7 @@
       "user": 130,
       "role_in_cohort": "MENTEE",
       "display_name": "Linnéa Åberg",
-      "organization": "Network Infrastructure",
+      "organization": 1001,
       "is_submitted": false,
       "submitted_at": null,
       "created_at": "2026-01-30T10:00:00Z",

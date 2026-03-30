@@ -35,7 +35,7 @@ def preferences_view(request, cohort_id):
     # Get candidates (participants in same cohort with opposite role)
     candidates = (
         Participant.objects.filter(cohort=cohort, role_in_cohort=opposite_role)
-        .select_related("mentor_profile", "mentee_profile")
+        .select_related("mentor_profile", "mentee_profile", "organization")
         .order_by("display_name")
     )
 
@@ -51,7 +51,7 @@ def preferences_view(request, cohort_id):
                 role_in_cohort=opposite_role,
                 organization=participant.organization,
             )
-            .select_related("mentor_profile", "mentee_profile")
+            .select_related("mentor_profile", "mentee_profile", "organization")
             .order_by("display_name")
         )
     else:

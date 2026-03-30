@@ -36,7 +36,7 @@
                             {% for candidate in candidates %}
                             <tr>
                                 <td>{{ candidate.display_name }}</td>
-                                <td>{{ candidate.organization }}</td>
+                                <td>{{ candidate.organization_name }}</td>
                                 <td>
                                     {% if candidate.id in preference_dict %}
                                         <span class="badge bg-primary">{{ preference_dict|get_item:candidate.id }}</span>

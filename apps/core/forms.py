@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Participant
+from .models import Participant, Organization
 
 
 class ParticipantProfileForm(forms.ModelForm):
@@ -13,7 +13,7 @@ class ParticipantProfileForm(forms.ModelForm):
                 attrs={"class": "form-control", "data-testid": "display-name-input"}
             ),
             "organization": forms.Select(
-                attrs={"class": "form-control", "data-testid": "organization-input"}
+                attrs={"class": "form-select", "data-testid": "organization-input"}
             ),
         }
         labels = {
@@ -24,6 +24,13 @@ class ParticipantProfileForm(forms.ModelForm):
             "display_name": "Your name as it will appear to others",
             "organization": "Your organization (required)",
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["organization"].queryset = Organization.objects.filter(
+            is_active=True
+        ).order_by("name")
+        self.fields["organization"].empty_label = "Select an organization"
 
     def clean_organization(self):
         organization = self.cleaned_data.get("organization")

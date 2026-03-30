@@ -100,6 +100,33 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1009,
+    "fields": {
+      "name": "Network Infrastructure",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1010,
+    "fields": {
+      "name": "Cloud & Edge Solutions",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1011,
+    "fields": {
+      "name": "Mobile Networks",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
     "model": "core.participant",
     "pk": 30101,
     "fields": {
@@ -107,7 +134,7 @@
       "user": 30001,
       "role_in_cohort": "MENTOR",
       "display_name": "Virág Kelemen",
-      "organization": "Network Infrastructure",
+      "organization": 1009,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -122,7 +149,7 @@
       "user": 30002,
       "role_in_cohort": "MENTOR",
       "display_name": "Nils Andersson",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1010,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -137,7 +164,7 @@
       "user": 30003,
       "role_in_cohort": "MENTOR",
       "display_name": "Csilla Barta",
-      "organization": "Network Infrastructure",
+      "organization": 1009,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -152,7 +179,7 @@
       "user": 30004,
       "role_in_cohort": "MENTEE",
       "display_name": "Márton Szűcs",
-      "organization": "Mobile Networks",
+      "organization": 1011,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -167,7 +194,7 @@
       "user": 30005,
       "role_in_cohort": "MENTEE",
       "display_name": "Hedvig Ström",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1010,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",
@@ -182,7 +209,7 @@
       "user": 30006,
       "role_in_cohort": "MENTEE",
       "display_name": "Dániel Orbán",
-      "organization": "Network Infrastructure",
+      "organization": 1009,
       "is_submitted": true,
       "submitted_at": "2026-03-01T10:00:00Z",
       "created_at": "2026-03-01T09:00:00Z",

@@ -70,6 +70,42 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1001,
+    "fields": {
+      "name": "Network Infrastructure",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1002,
+    "fields": {
+      "name": "Cloud & Edge Solutions",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1003,
+    "fields": {
+      "name": "Mobile Networks",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1004,
+    "fields": {
+      "name": "IP & Optical",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
     "model": "core.participant",
     "pk": 20061,
     "fields": {
@@ -77,7 +113,7 @@
       "user": 24001,
       "role_in_cohort": "MENTOR",
       "display_name": "István Bodnár",
-      "organization": "Network Infrastructure",
+      "organization": 1001,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"
@@ -91,7 +127,7 @@
       "user": 24002,
       "role_in_cohort": "MENTOR",
       "display_name": "Alma Svensson",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1002,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"
@@ -105,7 +141,7 @@
       "user": 24003,
       "role_in_cohort": "MENTEE",
       "display_name": "Lilla Juhász",
-      "organization": "Mobile Networks",
+      "organization": 1003,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"
@@ -119,7 +155,7 @@
       "user": 24004,
       "role_in_cohort": "MENTEE",
       "display_name": "Hugo Wallin",
-      "organization": "IP & Optical",
+      "organization": 1004,
       "is_submitted": false,
       "created_at": "2026-02-01T09:30:00Z",
       "updated_at": "2026-02-01T09:30:00Z"

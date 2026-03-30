@@ -160,6 +160,51 @@
     }
   },
   {
+    "model": "core.organization",
+    "pk": 1001,
+    "fields": {
+      "name": "Network Infrastructure",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1002,
+    "fields": {
+      "name": "Cloud & Edge Solutions",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1003,
+    "fields": {
+      "name": "Mobile Networks",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1004,
+    "fields": {
+      "name": "IP & Optical",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.organization",
+    "pk": 1005,
+    "fields": {
+      "name": "Enterprise Solutions",
+      "is_active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
     "model": "core.participant",
     "pk": 11,
     "fields": {
@@ -167,7 +212,7 @@
       "user": 111,
       "role_in_cohort": "MENTOR",
       "display_name": "András Németh",
-      "organization": "Network Infrastructure",
+      "organization": 1001,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -182,7 +227,7 @@
       "user": 112,
       "role_in_cohort": "MENTOR",
       "display_name": "Lars Johansson",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1002,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -197,7 +242,7 @@
       "user": 113,
       "role_in_cohort": "MENTOR",
       "display_name": "Fatima Al-Rashid",
-      "organization": "Mobile Networks",
+      "organization": 1003,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -212,7 +257,7 @@
       "user": 114,
       "role_in_cohort": "MENTOR",
       "display_name": "Sven Eriksson",
-      "organization": "IP & Optical",
+      "organization": 1004,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -227,7 +272,7 @@
       "user": 115,
       "role_in_cohort": "MENTOR",
       "display_name": "Ravi Patel",
-      "organization": "Enterprise Solutions",
+      "organization": 1005,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -242,7 +287,7 @@
       "user": 116,
       "role_in_cohort": "MENTEE",
       "display_name": "Zsófia Horváth",
-      "organization": "Cloud & Edge Solutions",
+      "organization": 1002,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -257,7 +302,7 @@
       "user": 117,
       "role_in_cohort": "MENTEE",
       "display_name": "Ingrid Nyström",
-      "organization": "Mobile Networks",
+      "organization": 1003,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -272,7 +317,7 @@
       "user": 118,
       "role_in_cohort": "MENTEE",
       "display_name": "Yuki Nakamura",
-      "organization": "IP & Optical",
+      "organization": 1004,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -287,7 +332,7 @@
       "user": 119,
       "role_in_cohort": "MENTEE",
       "display_name": "Nóra Farkas",
-      "organization": "Enterprise Solutions",
+      "organization": 1005,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",
@@ -302,7 +347,7 @@
       "user": 120,
       "role_in_cohort": "MENTEE",
       "display_name": "Olof Sandberg",
-      "organization": "Network Infrastructure",
+      "organization": 1001,
       "is_submitted": true,
       "submitted_at": "2026-01-30T11:00:00Z",
       "created_at": "2026-01-30T10:00:00Z",

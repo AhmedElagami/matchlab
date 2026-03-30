@@ -88,7 +88,7 @@ Open the app at `http://localhost:8000/auth/login/`.
 
 **Steps**
 1. Login as `mentor1`.
-2. Update `data-testid="display-name-input"` and `data-testid="organization-input"`, click `data-testid="save-profile-button"`.
+2. Update `data-testid="display-name-input"` and select an organization from the `data-testid="organization-input"` dropdown, click `data-testid="save-profile-button"`.
 3. Confirm success alert and refreshed values.
 4. Repeat for `mentee1`.
 
