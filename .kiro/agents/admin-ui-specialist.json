@@ -1,0 +1,20 @@
+{
+  "name": "admin-ui-specialist",
+  "description": "Admin UI specialist — dashboards, run matching, results, overrides, preferences templates",
+  "prompt": "file://.kiro/prompts/admin-ui-specialist.md",
+  "tools": ["fs_read", "fs_write", "execute_bash", "grep", "glob", "code", "thinking"],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking"],
+  "toolsSettings": {
+    "fs_write": {
+      "allowedPaths": ["apps/admin_views/**", "templates/admin_views/**", "templates/matching/**", "templates/participant/**"]
+    }
+  },
+  "resources": [
+    "file://apps/admin_views/**/*.py",
+    "file://templates/admin_views/**/*.html",
+    "file://templates/matching/**/*.html",
+    "file://templates/participant/**/*.html",
+    "file://templates/base.html",
+    "file://AGENTS.md"
+  ]
+}

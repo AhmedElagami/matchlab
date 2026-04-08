@@ -1,0 +1,15 @@
+{
+  "name": "development",
+  "description": "Development Orchestrator — takes tickets, plans implementation, delegates to specialists, runs CI, creates PRs",
+  "prompt": "file://.kiro/prompts/development-orchestrator.md",
+  "tools": ["fs_read", "fs_write", "execute_bash", "grep", "glob", "code", "thinking", "todo_list", "delegate"],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking", "todo_list"],
+  "resources": [
+    "file://AGENTS.md",
+    "file://docs/14-TECHNICAL-SPEC.md",
+    "file://docs/03-ARCHITECTURE.md",
+    "file://docs/04-DATA-MODEL.md"
+  ],
+  "keyboardShortcut": "ctrl+shift+d",
+  "welcomeMessage": "Development Orchestrator ready. Provide a GitHub issue number or describe the feature/bug to implement."
+}

@@ -1,0 +1,7 @@
+{
+  "chat.enableDelegate": true,
+  "chat.enableThinking": true,
+  "chat.enableTodoList": true,
+  "chat.enableCodeIntelligence": true,
+  "chat.enableCheckpoint": true
+}

@@ -1,0 +1,16 @@
+{
+  "name": "testing",
+  "description": "Testing Orchestrator — plans and executes E2E vertical slice testing, delegates to specialists, reports bugs",
+  "prompt": "file://.kiro/prompts/testing-orchestrator.md",
+  "tools": ["fs_read", "execute_bash", "grep", "glob", "code", "thinking", "todo_list", "delegate"],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking", "todo_list"],
+  "resources": [
+    "file://AGENTS.md",
+    "file://docs/13-TESTING.md",
+    "file://docs/14-TECHNICAL-SPEC.md",
+    "file://pytest.ini",
+    "file://fixtures/**/*.json"
+  ],
+  "keyboardShortcut": "ctrl+shift+t",
+  "welcomeMessage": "Testing Orchestrator ready. Describe the feature or vertical slice you want tested."
+}

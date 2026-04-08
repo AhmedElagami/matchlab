@@ -1,0 +1,19 @@
+{
+  "name": "core-specialist",
+  "description": "Core & Auth specialist — apps/core/, auth, cohorts, organizations, participants, registration",
+  "prompt": "file://.kiro/prompts/core-specialist.md",
+  "tools": ["fs_read", "fs_write", "execute_bash", "grep", "glob", "code", "thinking"],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking"],
+  "toolsSettings": {
+    "fs_write": {
+      "allowedPaths": ["apps/core/**", "templates/core/**", "templates/auth/**", "templates/registration/**"]
+    }
+  },
+  "resources": [
+    "file://apps/core/**/*.py",
+    "file://templates/core/**/*.html",
+    "file://templates/auth/**/*.html",
+    "file://templates/registration/**/*.html",
+    "file://AGENTS.md"
+  ]
+}

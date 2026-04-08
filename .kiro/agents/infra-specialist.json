@@ -1,0 +1,22 @@
+{
+  "name": "infra-specialist",
+  "description": "Infrastructure specialist — config, CI, Docker, scripts, fixtures, deployment",
+  "prompt": "file://.kiro/prompts/infra-specialist.md",
+  "tools": ["fs_read", "fs_write", "execute_bash", "grep", "glob", "code", "thinking"],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking"],
+  "toolsSettings": {
+    "fs_write": {
+      "allowedPaths": ["config/**", "scripts/**", "fixtures/**", ".github/**", "docker-compose*", "Dockerfile*", "requirements.txt", "pytest.ini", "manage.py", "playwright_tests/conftest.py"]
+    }
+  },
+  "resources": [
+    "file://config/**/*.py",
+    "file://scripts/**",
+    "file://.github/workflows/**",
+    "file://docker-compose*.yml",
+    "file://Dockerfile*",
+    "file://requirements.txt",
+    "file://pytest.ini",
+    "file://AGENTS.md"
+  ]
+}
